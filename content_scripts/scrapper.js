@@ -9,6 +9,9 @@
   }
   window.cnb_scrapper_hasRun = true;
 
+  const postedTableId = 'mycardsPostedTransactionsTableMainTable';
+  const pendingTableId = 'mycardsPendingTxnTableMainTable';
+
   const monthMap = {
     'Jan': '01',
     'Feb': '02',
@@ -23,8 +26,6 @@
     'Nov': '11',
     'Dec': '12',
   };
-
-  rows = document.querySelectorAll('#mycardsPostedTransactionsTableMainTable tbody tr');
 
   function getMoneyFromString(moneyString) {
     const regex = /(\d+\.\d+)/;
@@ -41,31 +42,43 @@
     return `${year}/${monthMap[month]}/${day}`;
   }
 
-  function processTransactions(transactionType) {
+  function extractPostedReferenceNumber(paymentData, transactionData) {
+    referenceNumber = '';
+    for (var i = 0; i < transactionData.length; i++) {
+      const data = transactionData[i];
+      const regex = /Reference Number:(.*)/;
+      const regexMatch = regex.exec(data.textContent);
+      if (regexMatch != null) {
+        referenceNumber = regexMatch[1];
+        break;
+      }
+    }
+    return referenceNumber;
+  }
+
+  function extractPendingReferenceNumber(paymentData, transactionData) {
+    return paymentData[2] + Math.random();
+  }
+
+  function processTransactions(tableID, referenceNumberGetter) {
+    const rows = document.querySelectorAll(`#${tableID} tbody tr`);
+
     observer = new MutationObserver(mutations => {
       observer.disconnect();
+
       rows.forEach((element) => {
         element.click();
       })
 
       var referenceNumbers = new Set();
       var payments = [];
-
       rows.forEach((element) => {
+        const paymentData = element.querySelectorAll('td:not(:first-child)');
+
         const transactionDataRow = element.nextSibling
         const transactionData = transactionDataRow.querySelectorAll('div p');
 
-        referenceNumber = '';
-        for (var i = 0; i < transactionData.length; i++) {
-          const data = transactionData[i];
-          const regex = /Reference Number:(.*)/;
-          const regexMatch = regex.exec(data.textContent);
-          if (regexMatch != null) {
-            referenceNumber = regexMatch[1];
-            break;
-          }
-        }
-
+        referenceNumber = referenceNumberGetter(paymentData, transactionData);
         if (referenceNumbers.has(referenceNumber)) {
           return;
         }
@@ -83,8 +96,8 @@
           }
         }
 
-        const business = element.children[3].textContent;
-        const money = element.children[6].querySelector('span').textContent;
+        const business = paymentData[2].textContent;
+        const money = paymentData[5].querySelector('span').textContent;
 
         payments.push({
           'business': business,
@@ -108,7 +121,7 @@
         });
     });
 
-    observer.observe(document.querySelector('#mycardsPostedTransactionsTableMainTable'), {
+    observer.observe(document.querySelector(`#${tableID}`), {
       childList: true,
       subtree: true
     });
@@ -120,7 +133,11 @@
 
   browser.runtime.onMessage.addListener((message) => {
     if (message.command === "cnb_scrap") {
-      processTransactions(message.transactionType);
+      if (message.transactionType == 'posted') {
+        processTransactions(postedTableId, extractPostedReferenceNumber);
+      } else if (message.transactionType == 'pending') {
+        processTransactions(pendingTableId, extractPendingReferenceNumber);
+      }
     }
   });
 

@@ -1,10 +1,12 @@
 
 function listenForClicks (activeTab) {
   document.addEventListener('click', (e) => {
-    browser.tabs.sendMessage(activeTab.id, {
-      command: "cnb_scrap",
-      transactionType: 'none'
-    });
+    if (e.target.classList.contains('transaction_type')) {
+      browser.tabs.sendMessage(activeTab.id, {
+        command: "cnb_scrap",
+        transactionType: e.target.textContent.toLowerCase()
+      });
+    }
   });
 }
 
