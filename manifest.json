@@ -4,14 +4,15 @@
   "version": "1.0",
   "description": "Scrap CNB content and it delivers it in a more friendly format. You can select between posted transactions or in progress ones",
   "icons": {
-    "48": "icons/icon-48.png"
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
   },
   "permissions": [
     "activeTab",
     "clipboardWrite"
   ],
   "browser_action": {
-    "default_icon": "icons/icon-48.png",
+    "default_icon": "icons/icon-96.png",
     "default_title": "CNB Scrap",
     "default_popup": "popup/choose_scrapper.html"
   }
