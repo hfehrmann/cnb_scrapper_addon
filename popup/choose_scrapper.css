@@ -1,0 +1,20 @@
+html,
+body {
+  width: 100px;
+}
+
+.button {
+  margin: 3% auto;
+  padding: 4px;
+  text-align: center;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.transaction_type:hover {
+  background-color: #CFF2F2;
+}
+
+.transaction_type {
+  background-color: #E5F2F2;
+}
