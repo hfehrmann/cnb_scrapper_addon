@@ -132,7 +132,7 @@
 
 
       const joinedTable = payments
-        .map(payment => [payment.transactionDate, payment.business, payment.money].join('\t'))
+        .map(payment => [payment.transactionDate, payment.business, '', '', '', payment.money].join('\t'))
         .join('\n');
 
       navigator.clipboard.writeText(joinedTable)
