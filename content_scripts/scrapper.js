@@ -1,4 +1,72 @@
 (() => {
+
+  function getMoneyFromString(moneyString) {
+    const regex = /(-?)\(?.?([\d,]+\.\d+)\)?/;
+    const matches = regex.exec(moneyString);
+    const sign = matches[1]
+    const money = matches[2];
+    return sign + money.replace(',', '').replace('.', ',');
+  }
+
+  function getDateFromString(date) {
+    const regex = /(\w+) (\d\d), (\d\d\d\d)/;
+    const regexMatch = regex.exec(date);
+    const month = regexMatch[1];
+    const day = regexMatch[2];
+    const year = regexMatch[3];
+    return `${year}/${monthMap[month]}/${day}`;
+  }
+
+  const postedTransactionObject = {
+    tableID: 'mycardsPostedTransactionsTableMainTable',
+    referenceNumberGetter: function (paymentData, transactionData) {
+      referenceNumber = '';
+      for (var i = 0; i < transactionData.length; i++) {
+        const data = transactionData[i];
+        const regex = /Reference Number:(.*)/;
+        const regexMatch = regex.exec(data.textContent);
+        if (regexMatch != null) {
+          referenceNumber = regexMatch[1];
+          break;
+        }
+      }
+      return referenceNumber;
+    },
+    dateGetter: function(paymentData, transactionData) {
+      datePosted = '';
+      for (var i = 0; i < transactionData.length; i++) {
+        const data = transactionData[i];
+        const regex = /Transaction Date:(.*)/;
+        const regexMatch = regex.exec(data.textContent);
+        if (regexMatch != null) {
+          datePosted = regexMatch[1];
+          break;
+        }
+      }
+      return getDateFromString(datePosted);
+    }
+  };
+
+  const pendingTransactionObject = {
+    tableID: 'mycardsPendingTxnTableMainTable',
+    referenceNumberGetter: function (paymentData, transactionData) {
+      return paymentData[2] + Math.random();
+    },
+    dateGetter: function(paymentData, transactionData) {
+      datePosted = '';
+      for (var i = 0; i < transactionData.length; i++) {
+        const data = transactionData[i];
+        const regex = /Transaction Date:(.*)/;
+        const regexMatch = regex.exec(data.textContent);
+        if (regexMatch != null) {
+          datePosted = regexMatch[1];
+          break;
+        }
+      }
+      return getDateFromString(datePosted);
+    }
+  };
+
   /**
    * Check and set a global guard variable.
    * If this content script is injected into the same page again,
@@ -8,9 +76,6 @@
     return;
   }
   window.cnb_scrapper_hasRun = true;
-
-  const postedTableId = 'mycardsPostedTransactionsTableMainTable';
-  const pendingTableId = 'mycardsPendingTxnTableMainTable';
 
   const monthMap = {
     'Jan': '01',
@@ -27,41 +92,8 @@
     'Dec': '12',
   };
 
-  function getMoneyFromString(moneyString) {
-    const regex = /(\d+\.\d+)/;
-    const money = regex.exec(moneyString.substring(1))[1];
-    return money.replace(',', '').replace('.', ',');
-  }
-
-  function getDateFromString(date) {
-    const regex = /(\w+) (\d\d), (\d\d\d\d)/;
-    const regexMatch = regex.exec(date);
-    const month = regexMatch[1];
-    const day = regexMatch[2];
-    const year = regexMatch[3];
-    return `${year}/${monthMap[month]}/${day}`;
-  }
-
-  function extractPostedReferenceNumber(paymentData, transactionData) {
-    referenceNumber = '';
-    for (var i = 0; i < transactionData.length; i++) {
-      const data = transactionData[i];
-      const regex = /Reference Number:(.*)/;
-      const regexMatch = regex.exec(data.textContent);
-      if (regexMatch != null) {
-        referenceNumber = regexMatch[1];
-        break;
-      }
-    }
-    return referenceNumber;
-  }
-
-  function extractPendingReferenceNumber(paymentData, transactionData) {
-    return paymentData[2] + Math.random();
-  }
-
-  function processTransactions(tableID, referenceNumberGetter) {
-    const rows = document.querySelectorAll(`#${tableID} tbody tr`);
+  function processTransactions(transactionObject) {
+    const rows = document.querySelectorAll(`#${transactionObject.tableID} tbody tr`);
 
     observer = new MutationObserver(mutations => {
       observer.disconnect();
@@ -78,38 +110,29 @@
         const transactionDataRow = element.nextSibling
         const transactionData = transactionDataRow.querySelectorAll('div p');
 
-        referenceNumber = referenceNumberGetter(paymentData, transactionData);
+        referenceNumber = transactionObject.referenceNumberGetter(paymentData, transactionData);
         if (referenceNumbers.has(referenceNumber)) {
           return;
         }
-
         referenceNumbers.add(referenceNumber);
 
-        datePosted = '';
-        for (var i = 0; i < transactionData.length; i++) {
-          const data = transactionData[i];
-          const regex = /Transaction Date:(.*)/;
-          const regexMatch = regex.exec(data.textContent);
-          if (regexMatch != null) {
-            datePosted = regexMatch[1];
-            break;
-          }
-        }
+        const transactionDate = transactionObject.dateGetter(paymentData, transactionData);
 
         const business = paymentData[2].textContent;
+
         const money = paymentData[5].querySelector('span').textContent;
 
         payments.push({
           'business': business,
           'referenceNumber': referenceNumber,
-          'datePosted': getDateFromString(datePosted),
+          'transactionDate': transactionDate,
           'money': getMoneyFromString(money)
         });
       });
 
 
       const joinedTable = payments
-        .map(payment => [payment.datePosted, payment.business, payment.money].join('\t'))
+        .map(payment => [payment.transactionDate, payment.business, payment.money].join('\t'))
         .join('\n');
 
       navigator.clipboard.writeText(joinedTable)
@@ -121,7 +144,7 @@
         });
     });
 
-    observer.observe(document.querySelector(`#${tableID}`), {
+    observer.observe(document.querySelector(`#${transactionObject.tableID}`), {
       childList: true,
       subtree: true
     });
@@ -134,9 +157,9 @@
   browser.runtime.onMessage.addListener((message) => {
     if (message.command === "cnb_scrap") {
       if (message.transactionType == 'posted') {
-        processTransactions(postedTableId, extractPostedReferenceNumber);
+        processTransactions(postedTransactionObject);
       } else if (message.transactionType == 'pending') {
-        processTransactions(pendingTableId, extractPendingReferenceNumber);
+        processTransactions(pendingTransactionObject);
       }
     }
   });
