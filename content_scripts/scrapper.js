@@ -1,5 +1,28 @@
 (() => {
 
+  const container = window.browser || window.chrome;
+  if (typeof window.browser === 'undefined') {
+    navigator.mCopyToClipboard = (text) => {
+      return new Promise((resolve, reject) => {
+        // Create hidden input with text
+        const el = document.createElement('textarea')
+        el.value = text
+        document.body.append(el)
+
+        // Select the text and copy to clipboard
+        el.select()
+        const success = document.execCommand('copy')
+        el.remove()
+
+        if (!success) reject(new Error('Unable to write to clipboard'))
+
+        resolve(text)
+      });
+    }
+  } else {
+    navigator.mCopyToClipboard = navigator.clipboard.writeText;
+  }
+
   function getMoneyFromString(moneyString) {
     const regex = /(-?)\(?.?([\d,]+\.\d+)\)?/;
     const matches = regex.exec(moneyString);
@@ -135,7 +158,7 @@
         .map(payment => [payment.transactionDate, payment.business, '', '', '', payment.money].join('\t'))
         .join('\n');
 
-      navigator.clipboard.writeText(joinedTable)
+      navigator.mCopyToClipboard(joinedTable)
         .then(() => {
           alert("successfully copied");
         })
@@ -154,7 +177,7 @@
     });
   }
 
-  browser.runtime.onMessage.addListener((message) => {
+  container.runtime.onMessage.addListener((message) => {
     if (message.command === "cnb_scrap") {
       if (message.transactionType == 'posted') {
         processTransactions(postedTransactionObject);
