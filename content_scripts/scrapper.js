@@ -1,7 +1,7 @@
 (() => {
 
-  const container = window.browser || window.chrome;
-  if (typeof window.browser === 'undefined') {
+  if (typeof window.chrome !== 'undefined') {
+    const container = window.chrome;
     navigator.mCopyToClipboard = (text) => {
       return new Promise((resolve, reject) => {
         // Create hidden input with text
@@ -20,7 +20,8 @@
       });
     }
   } else {
-    navigator.mCopyToClipboard = navigator.clipboard.writeText;
+    const container = browser;
+    navigator.mCopyToClipboard = (t) => navigator.clipboard.writeText(t);
   }
 
   function getMoneyFromString(moneyString) {
@@ -153,6 +154,7 @@
         });
       });
 
+      payments.reverse();
 
       const joinedTable = payments
         .map(payment => [payment.transactionDate, payment.business, '', '', '', payment.money].join('\t'))

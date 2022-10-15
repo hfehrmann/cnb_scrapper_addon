@@ -1,2 +1,3 @@
 popup/choose_scrapper.js
 manifest.json
+content_scripts/dep.js
