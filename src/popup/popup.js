@@ -1,3 +1,5 @@
+import css from './popup.css'
+import browser from 'webextension-polyfill'
 
 function listenForClicks (activeTab) {
   document.addEventListener('click', (e) => {
@@ -19,7 +21,7 @@ browser.tabs.query({ active: true, currentWindow: true })
   if (!isCNBWebPage) { return; }
 
   browser.tabs
-    .executeScript({ file: "/content_scripts/scrapper.js" })
+    .executeScript({ file: "scrapper.js" })
     .then(() => listenForClicks(activeTab))
     .catch(error => console.log('Error: ' + error));
 });

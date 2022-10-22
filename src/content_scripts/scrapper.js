@@ -1,29 +1,7 @@
+import {container, mCopyToClipboard} from 'browser_dep'
+
 (() => {
-
-  if (typeof window.chrome !== 'undefined') {
-    const container = window.chrome;
-    navigator.mCopyToClipboard = (text) => {
-      return new Promise((resolve, reject) => {
-        // Create hidden input with text
-        const el = document.createElement('textarea')
-        el.value = text
-        document.body.append(el)
-
-        // Select the text and copy to clipboard
-        el.select()
-        const success = document.execCommand('copy')
-        el.remove()
-
-        if (!success) reject(new Error('Unable to write to clipboard'))
-
-        resolve(text)
-      });
-    }
-  } else {
-    const container = browser;
-    navigator.mCopyToClipboard = (t) => navigator.clipboard.writeText(t);
-  }
-
+  'use strict'
   function getMoneyFromString(moneyString) {
     const regex = /(-?)\(?.?([\d,]+\.\d+)\)?/;
     const matches = regex.exec(moneyString);
@@ -44,8 +22,8 @@
   const postedTransactionObject = {
     tableID: 'mycardsPostedTransactionsTableMainTable',
     referenceNumberGetter: function (paymentData, transactionData) {
-      referenceNumber = '';
-      for (var i = 0; i < transactionData.length; i++) {
+      let referenceNumber = '';
+      for (let i = 0; i < transactionData.length; i++) {
         const data = transactionData[i];
         const regex = /Reference Number:(.*)/;
         const regexMatch = regex.exec(data.textContent);
@@ -57,8 +35,8 @@
       return referenceNumber;
     },
     dateGetter: function(paymentData, transactionData) {
-      datePosted = '';
-      for (var i = 0; i < transactionData.length; i++) {
+      let datePosted = '';
+      for (let i = 0; i < transactionData.length; i++) {
         const data = transactionData[i];
         const regex = /Transaction Date:(.*)/;
         const regexMatch = regex.exec(data.textContent);
@@ -77,8 +55,8 @@
       return paymentData[2] + Math.random();
     },
     dateGetter: function(paymentData, transactionData) {
-      datePosted = '';
-      for (var i = 0; i < transactionData.length; i++) {
+      let datePosted = '';
+      for (let i = 0; i < transactionData.length; i++) {
         const data = transactionData[i];
         const regex = /Transaction Date:(.*)/;
         const regexMatch = regex.exec(data.textContent);
@@ -119,22 +97,23 @@
   function processTransactions(transactionObject) {
     const rows = document.querySelectorAll(`#${transactionObject.tableID} tbody tr`);
 
-    observer = new MutationObserver(mutations => {
+    const observer = new MutationObserver(mutations => {
       observer.disconnect();
 
       rows.forEach((element) => {
         element.click();
       })
 
-      var referenceNumbers = new Set();
-      var payments = [];
+      let referenceNumbers = new Set();
+      let payments = [];
+
       rows.forEach((element) => {
         const paymentData = element.querySelectorAll('td:not(:first-child)');
 
         const transactionDataRow = element.nextSibling
         const transactionData = transactionDataRow.querySelectorAll('div p');
 
-        referenceNumber = transactionObject.referenceNumberGetter(paymentData, transactionData);
+        const referenceNumber = transactionObject.referenceNumberGetter(paymentData, transactionData);
         if (referenceNumbers.has(referenceNumber)) {
           return;
         }
@@ -160,7 +139,7 @@
         .map(payment => [payment.transactionDate, payment.business, '', '', '', payment.money].join('\t'))
         .join('\n');
 
-      navigator.mCopyToClipboard(joinedTable)
+      mCopyToClipboard(joinedTable)
         .then(() => {
           alert("successfully copied");
         })
