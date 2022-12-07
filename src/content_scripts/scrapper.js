@@ -7,7 +7,7 @@ import {container, mCopyToClipboard} from 'browser_dep'
     const matches = regex.exec(moneyString);
     const sign = matches[1]
     const money = matches[2];
-    return sign + money.replace(',', '').replace('.', ',');
+    return sign + money.replace(',', '');
   }
 
   function getDateFromString(date) {

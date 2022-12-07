@@ -3,6 +3,25 @@ body {
   width: 100px;
 }
 
+#date_input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.date_modifier:hover {
+  background-color: #5dbc5f;
+}
+
+.date_modifier {
+  background-color: #72d773;
+}
+
+.spacer {
+  margin: 10px 0px;
+  height: 1px;
+  background-color: #000;
+}
+
 .button {
   margin: 3% auto;
   padding: 4px;
