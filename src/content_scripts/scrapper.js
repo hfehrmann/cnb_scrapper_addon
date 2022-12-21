@@ -19,6 +19,16 @@ import {container, mCopyToClipboard} from 'browser_dep'
     return `${year}/${monthMap[month]}/${day}`;
   }
 
+  function getBusinessName(name) {
+    let trimmedName = name.replace(/\s+/g," ");
+    return trimmedName.replace(
+      /\b\w+\b/g,
+      function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      }
+    );
+  }
+
   const postedTransactionObject = {
     tableID: 'mycardsPostedTransactionsTableMainTable',
     referenceNumberGetter: function (paymentData, transactionData) {
@@ -126,7 +136,7 @@ import {container, mCopyToClipboard} from 'browser_dep'
         const money = paymentData[5].querySelector('span').textContent;
 
         payments.push({
-          'business': business,
+          'business': getBusinessName(business),
           'referenceNumber': referenceNumber,
           'transactionDate': transactionDate,
           'money': getMoneyFromString(money)
