@@ -1,3 +1,4 @@
+import browser from 'webextension-polyfill'
 import {container, mCopyToClipboard} from 'browser_dep'
 
 (() => {
@@ -12,6 +13,18 @@ import {container, mCopyToClipboard} from 'browser_dep'
     return;
   }
   window.cnb_scrapper_hasRun = true;
+
+  let defaultStorageData = {
+    referenceNumbers: [],
+    temporalReferenceNumbers: []
+  };
+  let localStorage = browser.storage.local;
+
+  function checkStoredData(storedSettings) {
+    if (!storedSettings.referenceNumbers || !storedSettings.temporalReferenceNumbers) {
+      localStorage.set(defaultStorageData);
+    }
+  }
 
   function getMoneyFromString(moneyString) {
     const regex = /(-?)\(?.?([\d,]+\.\d+)\)?/;
@@ -105,7 +118,11 @@ import {container, mCopyToClipboard} from 'browser_dep'
     'Dec': '12',
   };
 
-  function processTransactions(transactionObject) {
+  function processTransactions(
+    storedReferenceNumbers,
+    shouldAddReferenceInTemporalStorage,
+    transactionObject
+  ) {
     const rows = document.querySelectorAll(`#${transactionObject.tableID} tbody tr`);
 
     const observer = new MutationObserver(mutations => {
@@ -136,13 +153,22 @@ import {container, mCopyToClipboard} from 'browser_dep'
 
         const money = paymentData[5].querySelector('span').textContent;
 
-        payments.push({
-          'business': getBusinessName(business),
-          'referenceNumber': referenceNumber,
-          'transactionDate': transactionDate,
-          'money': getMoneyFromString(money)
-        });
+        if (!storedReferenceNumbers.has(referenceNumber)) {
+          storedReferenceNumbers.add(referenceNumber)
+          payments.push({
+            'business': getBusinessName(business),
+            'referenceNumber': referenceNumber,
+            'transactionDate': transactionDate,
+            'money': getMoneyFromString(money)
+          });
+        }
       });
+
+      if (shouldAddReferenceInTemporalStorage) {
+        localStorage.set({
+          temporalReferenceNumbers: Array.from(storedReferenceNumbers)
+        });
+      }
 
       payments.reverse();
 
@@ -169,13 +195,51 @@ import {container, mCopyToClipboard} from 'browser_dep'
     });
   }
 
+  function promoteStoredReferenceNumbers() {
+    localStorage.get()
+      .then(storedData => {
+        return localStorage.set({
+          referenceNumbers: storedData.temporalReferenceNumbers,
+          temporalReferenceNumbers: []
+        })
+      })
+      .then(() => {
+        alert("Promoted!");
+      });
+  }
+
+  function resetStoredReferenceNumbers() {
+    localStorage.set(defaultStorageData)
+      .then(() => {
+        alert("Reset!");
+      })
+  }
+
+  localStorage.get().then(checkStoredData, null);
+
   container.runtime.onMessage.addListener((message) => {
     if (message.command === "cnb_scrap") {
-      if (message.transactionType == 'posted') {
-        processTransactions(postedTransactionObject);
-      } else if (message.transactionType == 'pending') {
-        processTransactions(pendingTransactionObject);
-      }
+      localStorage.get("referenceNumbers")
+        .then(storedData => {
+          const storedReferenceNumbers = new Set(storedData.referenceNumber);
+          if (message.transactionType == 'posted') {
+            processTransactions(
+              storedReferenceNumbers,
+              true,
+              postedTransactionObject
+            );
+          } else if (message.transactionType == 'pending') {
+            processTransactions(
+              storedReferenceNumbers,
+              false,
+              pendingTransactionObject
+            );
+          }
+        });
+    } else if (message.command === "cnb_promote") {
+      promoteStoredReferenceNumbers();
+    } else if (message.command === "cnb_reset") {
+      resetStoredReferenceNumbers();
     }
   });
 

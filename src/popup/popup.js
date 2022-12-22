@@ -10,6 +10,18 @@ function listenForClicks (activeTab) {
       });
     }
   });
+
+  document.getElementById("promote").addEventListener('click', (e) => {
+    browser.tabs.sendMessage(activeTab.id, {
+      command: "cnb_promote"
+    });
+   });
+
+  document.getElementById("reset").addEventListener('click', (e) => {
+    browser.tabs.sendMessage(activeTab.id, {
+      command: "cnb_reset"
+    });
+  });
 }
 
 browser.tabs.query({ active: true, currentWindow: true })
