@@ -2,6 +2,17 @@ import {container, mCopyToClipboard} from 'browser_dep'
 
 (() => {
   'use strict'
+
+  /**
+   * Check and set a global guard variable.
+   * If this content script is injected into the same page again,
+   * it will do nothing next time.
+   */
+   if (window.cnb_scrapper_hasRun) {
+    return;
+  }
+  window.cnb_scrapper_hasRun = true;
+
   function getMoneyFromString(moneyString) {
     const regex = /(-?)\(?.?([\d,]+\.\d+)\)?/;
     const matches = regex.exec(moneyString);
@@ -78,16 +89,6 @@ import {container, mCopyToClipboard} from 'browser_dep'
       return getDateFromString(datePosted);
     }
   };
-
-  /**
-   * Check and set a global guard variable.
-   * If this content script is injected into the same page again,
-   * it will do nothing next time.
-   */
-  if (window.cnb_scrapper_hasRun) {
-    return;
-  }
-  window.cnb_scrapper_hasRun = true;
 
   const monthMap = {
     'Jan': '01',
