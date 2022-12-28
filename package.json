@@ -5,9 +5,11 @@
   "private": true,
   "scripts": {
     "dev:firefox": "npx webpack --env browserType=FIREFOX --watch",
-    "make:firefox": "npx webpack --env browserType=FIREFOX",
     "dev:chrome": "npx webpack --env browserType=CHROME --watch",
-    "make:chrome": "npx webpack --env browserType=CHROME"
+    "make:firefox": "npx webpack --env browserType=FIREFOX",
+    "make:chrome": "npx webpack --env browserType=CHROME",
+    "sign:firefox": "npm run make:firefox; env $(grep -v '^#' scripts/.secret.sign-keys.txt) scripts/web-ext-sign.sh",
+    "sign:chrome": "npm run make:chrome; env $(grep -v '^#' scripts/.secret.sign-keys.txt) scripts/web-ext-sign.sh"
   },
   "repository": {
     "type": "git",
