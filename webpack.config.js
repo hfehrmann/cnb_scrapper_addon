@@ -7,6 +7,7 @@ module.exports = (env) => {
   const baseSrc = path.resolve(__dirname, 'src');
   const popupDir = path.resolve(baseSrc, 'popup');
   const contentScriptDir = path.resolve(baseSrc, 'content_scripts');
+  const iconPath = 'prod';
 
   const browserType = env.browserType;
 
@@ -54,7 +55,7 @@ module.exports = (env) => {
       new CopyPlugin({
         patterns: [
           { from: path.resolve(baseSrc, 'manifest.json'), to: 'manifest.json' },
-          { from: path.resolve(baseSrc, 'icons/*'), to: "icons/[name][ext]", },
+          { from: path.resolve(baseSrc, `icons/${iconPath}/*`), to: "icons/[name][ext]", },
         ],
       }),
       new HtmlWebpackPlugin({
