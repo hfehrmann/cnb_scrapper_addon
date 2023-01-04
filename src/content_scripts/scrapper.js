@@ -219,9 +219,9 @@ import {container, mCopyToClipboard} from 'browser_dep'
 
   container.runtime.onMessage.addListener((message) => {
     if (message.command === "cnb_scrap") {
-      localStorage.get("referenceNumbers")
+      localStorage.get()
         .then(storedData => {
-          const storedReferenceNumbers = new Set(storedData.referenceNumber);
+          const storedReferenceNumbers = new Set(storedData.referenceNumbers);
           if (message.transactionType == 'posted') {
             processTransactions(
               storedReferenceNumbers,
