@@ -1,6 +1,8 @@
 import browser from 'webextension-polyfill'
 import {container, mCopyToClipboard} from 'browser_dep'
 
+import * as actions from 'constants/actions'
+
 (() => {
   'use strict'
 
@@ -218,7 +220,7 @@ import {container, mCopyToClipboard} from 'browser_dep'
   localStorage.get().then(checkStoredData, null);
 
   container.runtime.onMessage.addListener((message) => {
-    if (message.command === "cnb_scrap") {
+    if (message.command === actions.scrap) {
       localStorage.get()
         .then(storedData => {
           const storedReferenceNumbers = new Set(storedData.referenceNumbers);
@@ -236,9 +238,9 @@ import {container, mCopyToClipboard} from 'browser_dep'
             );
           }
         });
-    } else if (message.command === "cnb_promote") {
+    } else if (message.command === actions.promote) {
       promoteStoredReferenceNumbers();
-    } else if (message.command === "cnb_reset") {
+    } else if (message.command === actions.reset) {
       resetStoredReferenceNumbers();
     }
   });

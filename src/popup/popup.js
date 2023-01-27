@@ -1,11 +1,13 @@
 import css from './popup.css'
 import browser from 'webextension-polyfill'
 
+import * as actions from 'constants/actions.js'
+
 function listenForClicks (activeTab) {
   document.addEventListener('click', (e) => {
     if (e.target.classList.contains('transaction_type')) {
       browser.tabs.sendMessage(activeTab.id, {
-        command: "cnb_scrap",
+        command: actions.scrap,
         transactionType: e.target.textContent.toLowerCase()
       });
     }
@@ -13,13 +15,13 @@ function listenForClicks (activeTab) {
 
   document.getElementById("promote").addEventListener('click', (e) => {
     browser.tabs.sendMessage(activeTab.id, {
-      command: "cnb_promote"
+      command: actions.promote
     });
    });
 
   document.getElementById("reset").addEventListener('click', (e) => {
     browser.tabs.sendMessage(activeTab.id, {
-      command: "cnb_reset"
+      command: actions.reset
     });
   });
 }

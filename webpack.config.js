@@ -31,6 +31,12 @@ module.exports = (env) => {
       popup: path.resolve(popupDir, 'popup.js'),
       scrapper: path.resolve(contentScriptDir, 'scrapper.js'),
     },
+    resolve: {
+      modules: [
+        path.resolve('./src'),
+        path.resolve('./node_modules')
+      ]
+    },
     mode: 'production',
     output: {
       filename: '[name].js',
