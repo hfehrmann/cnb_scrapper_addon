@@ -7,7 +7,7 @@ function listenForClicks (activeTab) {
   document.addEventListener('click', (e) => {
     if (e.target.classList.contains('transaction_type')) {
       browser.tabs.sendMessage(activeTab.id, {
-        command: actions.scrap,
+        command: actions.SCRAP,
         transactionType: e.target.textContent.toLowerCase()
       });
     }
@@ -15,13 +15,13 @@ function listenForClicks (activeTab) {
 
   document.getElementById("promote").addEventListener('click', (e) => {
     browser.tabs.sendMessage(activeTab.id, {
-      command: actions.promote
+      command: actions.PROMOTE
     });
    });
 
   document.getElementById("reset").addEventListener('click', (e) => {
     browser.tabs.sendMessage(activeTab.id, {
-      command: actions.reset
+      command: actions.RESET
     });
   });
 }

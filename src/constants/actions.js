@@ -1,3 +1,6 @@
-export const scrap = 'cnb_scrap'
-export const promote = 'cnb_promote'
-export const reset = 'cnb_reset'
+export const SCRAP = 'cnb_scrap'
+export const PROMOTE = 'cnb_promote'
+export const RESET = 'cnb_reset'
+
+export const POSTED = 'posted'
+export const PENDING = 'pending'

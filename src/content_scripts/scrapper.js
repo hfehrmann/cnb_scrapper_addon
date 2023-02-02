@@ -220,17 +220,17 @@ import * as actions from 'constants/actions'
   localStorage.get().then(checkStoredData, null);
 
   container.runtime.onMessage.addListener((message) => {
-    if (message.command === actions.scrap) {
+    if (message.command === actions.SCRAP) {
       localStorage.get()
         .then(storedData => {
           const storedReferenceNumbers = new Set(storedData.referenceNumbers);
-          if (message.transactionType == 'posted') {
+          if (message.transactionType == actions.POSTED) {
             processTransactions(
               storedReferenceNumbers,
               true,
               postedTransactionObject
             );
-          } else if (message.transactionType == 'pending') {
+          } else if (message.transactionType == actions.PENDING) {
             processTransactions(
               storedReferenceNumbers,
               false,
@@ -238,9 +238,9 @@ import * as actions from 'constants/actions'
             );
           }
         });
-    } else if (message.command === actions.promote) {
+    } else if (message.command === actions.PROMOTE) {
       promoteStoredReferenceNumbers();
-    } else if (message.command === actions.reset) {
+    } else if (message.command === actions.RESET) {
       resetStoredReferenceNumbers();
     }
   });
