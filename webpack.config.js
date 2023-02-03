@@ -3,11 +3,22 @@ const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { NormalModuleReplacementPlugin } = require( 'webpack' );
 
+function modifyManifest(buffer, mode) {
+  if (mode == 'development') {
+    var manifest = JSON.parse(buffer.toString());
+    delete manifest.browser_specific_settings;
+    return JSON.stringify(manifest, null, 2);
+  } else {
+    return buffer
+  }
+}
+
 module.exports = (env, args) => {
   const baseSrc = path.resolve(__dirname, 'src');
   const popupDir = path.resolve(baseSrc, 'popup');
+  const mode = args.mode ? args.mode : 'development';
   const contentScriptDir = path.resolve(baseSrc, 'content_scripts');
-  const iconPath = args.mode == 'production' ? 'prod' : 'development';
+  const iconPath = mode == 'production' ? 'prod' : 'development';
   const browserType = env.browserType;
 
   let config;
@@ -59,8 +70,17 @@ module.exports = (env, args) => {
       ),
       new CopyPlugin({
         patterns: [
-          { from: path.resolve(baseSrc, 'manifest.json'), to: 'manifest.json' },
-          { from: path.resolve(baseSrc, `icons/${iconPath}/*`), to: "icons/[name][ext]", },
+          {
+            from: path.resolve(baseSrc, 'manifest.json'),
+            to: 'manifest.json',
+            transform(content, absoluteFrom) {
+              return modifyManifest(content, mode);
+            },
+          },
+          {
+            from: path.resolve(baseSrc, `icons/${iconPath}/*`),
+            to: "icons/[name][ext]",
+          },
         ],
       }),
       new HtmlWebpackPlugin({

@@ -1,4 +1,6 @@
 
+const FOREIGN_TRANSACTION_FEE_BUSINESS = 'FOREIGN TRANSACTION FEE';
+
 function getMoneyFromString(moneyString) {
   const regex = /(-?)\(?.?([\d,]+\.\d+)\)?/;
   const matches = regex.exec(moneyString);
@@ -26,9 +28,12 @@ function itemTransformer(element, docCategoryObject) {
   const business = paymentData[2].textContent;
   const money = paymentData[5].querySelector('span').textContent;
 
+  const isForeignTransactionFee = FOREIGN_TRANSACTION_FEE_BUSINESS == business.toUpperCase();
+  const referenceNumberSufix = isForeignTransactionFee ? '_ftr' : '';
+
   return {
     business: getBusinessName(business),
-    referenceNumber: referenceNumber,
+    referenceNumber: referenceNumber + referenceNumberSufix,
     transactionDate: transactionDate,
     money: getMoneyFromString(money)
   };

@@ -34,12 +34,12 @@ describe("CNB WebPage", () => {
         [
           {
             business: 'Foreign Transaction Fee',
-            referenceNumber: '24692163025100218937207',
+            referenceNumber: '24692163025100218937207_ftr',
             transactionDate: '2023/01/26',
             money: '0.22',
           },
           {
-            business: 'Foreign Transaction Fee',
+            business: 'Netflix.Com',
             referenceNumber: '24692163025100218937207',
             transactionDate: '2023/01/26',
             money: '0.22',

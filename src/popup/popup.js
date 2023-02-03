@@ -3,25 +3,28 @@ import browser from 'webextension-polyfill'
 
 import * as actions from 'constants/actions.js'
 
-function listenForClicks (activeTab) {
+import { allowedURL } from 'constants/webpage'
+
+function listenForClicks (activeTab, webpage) {
   document.addEventListener('click', (e) => {
     if (e.target.classList.contains('transaction_type')) {
       browser.tabs.sendMessage(activeTab.id, {
         command: actions.SCRAP,
-        transactionType: e.target.textContent.toLowerCase()
+        transactionType: e.target.textContent.toLowerCase(),
+        webpage: webpage,
       });
     }
   });
 
   document.getElementById("promote").addEventListener('click', (e) => {
     browser.tabs.sendMessage(activeTab.id, {
-      command: actions.PROMOTE
+      command: actions.PROMOTE,
     });
    });
 
   document.getElementById("reset").addEventListener('click', (e) => {
     browser.tabs.sendMessage(activeTab.id, {
-      command: actions.RESET
+      command: actions.RESET,
     });
   });
 }
@@ -29,13 +32,11 @@ function listenForClicks (activeTab) {
 browser.tabs.query({ active: true, currentWindow: true })
 .then(tabs => {
   const activeTab = tabs[0];
-
-  const isCNBWebPage = activeTab.url.match(/https:\/\/cno\.cnb\.com\/.*/);
-
-  if (!isCNBWebPage) { return; }
-
-  browser.tabs
-    .executeScript({ file: "scrapper.js" })
-    .then(() => listenForClicks(activeTab))
-    .catch(error => console.log('Error: ' + error));
+  const matcher = allowedURL(activeTab.url);
+  matcher.then(webpage => {
+    browser.tabs
+      .executeScript({ file: "scrapper.js" })
+      .then(() => listenForClicks(activeTab, webpage))
+      .catch(error => console.log('Error: ' + error));
+  });
 });

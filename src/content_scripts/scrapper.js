@@ -1,5 +1,28 @@
-import browser from 'webextension-polyfill'
-import {container, mCopyToClipboard} from 'browser_dep'
+import browser from "webextension-polyfill"
+import {
+  container,
+  mCopyToClipboard,
+} from "browser_dep"
+
+import {
+    processTransactions,
+    promoteStoredReferenceNumbers,
+    resetStoredReferenceNumbers,
+} from "content_scripts/scrapper_actions";
+
+import {
+  transactionsExtractor as cnbTransactionsExtractor,
+} from "content_scripts/cnb/transactions_extractor";
+
+import {
+  postedCategoryObject as cnbPostedCategoryObject,
+  pendingCategoryObject as cnbPendingCategoryObject,
+} from "content_scripts/cnb/category_objects";
+
+import {
+  CNB_WEBPAGE,
+  AMEX_WEBPAGE,
+} from "constants/webpage"
 
 import * as actions from 'constants/actions'
 
@@ -11,10 +34,25 @@ import * as actions from 'constants/actions'
    * If this content script is injected into the same page again,
    * it will do nothing next time.
    */
-   if (window.cnb_scrapper_hasRun) {
+  if (window.cnb_scrapper_hasRun) {
     return;
   }
   window.cnb_scrapper_hasRun = true;
+
+  const transactionExtractorMap = {
+    [CNB_WEBPAGE]: {
+      [actions.POSTED]: (doc) => {
+        return cnbTransactionsExtractor(doc, cnbPostedCategoryObject)
+      },
+      [actions.PENDING]: (doc) => {
+        return cnbTransactionsExtractor(doc, cnbPendingCategoryObject)
+      },
+    },
+    [AMEX_WEBPAGE]: {
+      [actions.POSTED]: () => [],
+      [actions.PENDING]: () => [],
+    }
+  }
 
   let defaultStorageData = {
     referenceNumbers: [],
@@ -28,220 +66,36 @@ import * as actions from 'constants/actions'
     }
   }
 
-  function getMoneyFromString(moneyString) {
-    const regex = /(-?)\(?.?([\d,]+\.\d+)\)?/;
-    const matches = regex.exec(moneyString);
-    const sign = matches[1]
-    const money = matches[2];
-    return sign + money.replace(',', '');
-  }
-
-  function getDateFromString(date) {
-    const regex = /(\w+) (\d\d), (\d\d\d\d)/;
-    const regexMatch = regex.exec(date);
-    const month = regexMatch[1];
-    const day = regexMatch[2];
-    const year = regexMatch[3];
-    return `${year}/${monthMap[month]}/${day}`;
-  }
-
-  function getBusinessName(name) {
-    let trimmedName = name.replace(/\s+/g," ");
-    return trimmedName.replace(
-      /\b\w+\b/g,
-      function(txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-      }
-    );
-  }
-
-  const postedTransactionObject = {
-    tableID: 'mycardsPostedTransactionsTableMainTable',
-    referenceNumberGetter: function (paymentData, transactionData) {
-      let referenceNumber = '';
-      for (let i = 0; i < transactionData.length; i++) {
-        const data = transactionData[i];
-        const regex = /Reference Number:(.*)/;
-        const regexMatch = regex.exec(data.textContent);
-        if (regexMatch != null) {
-          referenceNumber = regexMatch[1];
-          break;
-        }
-      }
-      return referenceNumber;
-    },
-    dateGetter: function(paymentData, transactionData) {
-      let datePosted = '';
-      for (let i = 0; i < transactionData.length; i++) {
-        const data = transactionData[i];
-        const regex = /Transaction Date:(.*)/;
-        const regexMatch = regex.exec(data.textContent);
-        if (regexMatch != null) {
-          datePosted = regexMatch[1];
-          break;
-        }
-      }
-      return getDateFromString(datePosted);
-    }
-  };
-
-  const pendingTransactionObject = {
-    tableID: 'mycardsPendingTxnTableMainTable',
-    referenceNumberGetter: function (paymentData, transactionData) {
-      return paymentData[2] + Math.random();
-    },
-    dateGetter: function(paymentData, transactionData) {
-      let datePosted = '';
-      for (let i = 0; i < transactionData.length; i++) {
-        const data = transactionData[i];
-        const regex = /Transaction Date:(.*)/;
-        const regexMatch = regex.exec(data.textContent);
-        if (regexMatch != null) {
-          datePosted = regexMatch[1];
-          break;
-        }
-      }
-      return getDateFromString(datePosted);
-    }
-  };
-
-  const monthMap = {
-    'Jan': '01',
-    'Feb': '02',
-    'Mar': '03',
-    'Apr': '04',
-    'May': '05',
-    'Jun': '06',
-    'Jul': '07',
-    'Aug': '08',
-    'Sep': '09',
-    'Oct': '10',
-    'Nov': '11',
-    'Dec': '12',
-  };
-
-  function processTransactions(
-    storedReferenceNumbers,
-    shouldAddReferenceInTemporalStorage,
-    transactionObject
-  ) {
-    const rows = document.querySelectorAll(`#${transactionObject.tableID} tbody tr`);
-
-    const observer = new MutationObserver(mutations => {
-      observer.disconnect();
-
-      rows.forEach((element) => {
-        element.click();
-      })
-
-      let referenceNumbers = new Set();
-      let payments = [];
-
-      rows.forEach((element) => {
-        const paymentData = element.querySelectorAll('td:not(:first-child)');
-
-        const transactionDataRow = element.nextSibling
-        const transactionData = transactionDataRow.querySelectorAll('div p');
-
-        const referenceNumber = transactionObject.referenceNumberGetter(paymentData, transactionData);
-        if (referenceNumbers.has(referenceNumber)) {
-          return;
-        }
-        referenceNumbers.add(referenceNumber);
-
-        const transactionDate = transactionObject.dateGetter(paymentData, transactionData);
-
-        const business = paymentData[2].textContent;
-
-        const money = paymentData[5].querySelector('span').textContent;
-
-        if (!storedReferenceNumbers.has(referenceNumber)) {
-          storedReferenceNumbers.add(referenceNumber)
-          payments.push({
-            'business': getBusinessName(business),
-            'referenceNumber': referenceNumber,
-            'transactionDate': transactionDate,
-            'money': getMoneyFromString(money)
-          });
-        }
-      });
-
-      if (shouldAddReferenceInTemporalStorage) {
-        localStorage.set({
-          temporalReferenceNumbers: Array.from(storedReferenceNumbers)
-        });
-      }
-
-      payments.reverse();
-
-      const joinedTable = payments
-        .map(payment => [payment.transactionDate, payment.business, '', '', '', payment.money].join('\t'))
-        .join('\n');
-
-      mCopyToClipboard(joinedTable)
-        .then(() => {
-          alert("successfully copied");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    });
-
-    observer.observe(document.querySelector(`#${transactionObject.tableID}`), {
-      childList: true,
-      subtree: true
-    });
-
-    rows.forEach((element) => {
-      element.click();
-    });
-  }
-
-  function promoteStoredReferenceNumbers() {
-    localStorage.get()
-      .then(storedData => {
-        return localStorage.set({
-          referenceNumbers: storedData.temporalReferenceNumbers,
-          temporalReferenceNumbers: []
-        })
-      })
-      .then(() => {
-        alert("Promoted!");
-      });
-  }
-
-  function resetStoredReferenceNumbers() {
-    localStorage.set(defaultStorageData)
-      .then(() => {
-        alert("Reset!");
-      })
-  }
-
-  localStorage.get().then(checkStoredData, null);
+  localStorage.get().then(checkStoredData);
 
   container.runtime.onMessage.addListener((message) => {
     if (message.command === actions.SCRAP) {
       localStorage.get()
         .then(storedData => {
           const storedReferenceNumbers = new Set(storedData.referenceNumbers);
+          const webpage = message.webpage;
           if (message.transactionType == actions.POSTED) {
             processTransactions(
+              localStorage,
               storedReferenceNumbers,
+              transactionExtractorMap[webpage][actions.POSTED],
               true,
-              postedTransactionObject
+              mCopyToClipboard,
             );
           } else if (message.transactionType == actions.PENDING) {
             processTransactions(
+              localStorage,
               storedReferenceNumbers,
+              transactionExtractorMap[webpage][actions.PENDING],
               false,
-              pendingTransactionObject
+              mCopyToClipboard
             );
           }
         });
     } else if (message.command === actions.PROMOTE) {
-      promoteStoredReferenceNumbers();
+      promoteStoredReferenceNumbers(localStorage);
     } else if (message.command === actions.RESET) {
-      resetStoredReferenceNumbers();
+      resetStoredReferenceNumbers(localStorage, defaultStorageData);
     }
   });
 
