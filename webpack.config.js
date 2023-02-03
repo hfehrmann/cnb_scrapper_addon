@@ -3,12 +3,11 @@ const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { NormalModuleReplacementPlugin } = require( 'webpack' );
 
-module.exports = (env) => {
+module.exports = (env, args) => {
   const baseSrc = path.resolve(__dirname, 'src');
   const popupDir = path.resolve(baseSrc, 'popup');
   const contentScriptDir = path.resolve(baseSrc, 'content_scripts');
-  const iconPath = 'prod';
-
+  const iconPath = args.mode == 'production' ? 'prod' : 'development';
   const browserType = env.browserType;
 
   let config;
