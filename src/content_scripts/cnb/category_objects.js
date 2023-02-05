@@ -1,3 +1,4 @@
+import { USD, USD_PENDING } from 'constants/currency'
 
 const monthMap = {
   'Jan': '01',
@@ -25,6 +26,7 @@ function getDateFromString(date) {
 
 export const postedCategoryObject = {
   tableID: 'mycardsPostedTransactionsTableMainTable',
+  currency: USD,
   referenceNumberGetter: function (paymentData, transactionData) {
     let referenceNumber = '';
     for (let i = 0; i < transactionData.length; i++) {
@@ -55,6 +57,7 @@ export const postedCategoryObject = {
 
 export const pendingCategoryObject = {
   tableID: 'mycardsPendingTxnTableMainTable',
+  currency: USD_PENDING,
   referenceNumberGetter: function (paymentData, transactionData) {
     return paymentData[2] + Math.random();
   },

@@ -35,6 +35,7 @@ function itemTransformer(element, docCategoryObject) {
     business: getBusinessName(business),
     referenceNumber: referenceNumber + referenceNumberSufix,
     transactionDate: transactionDate,
+    currency: docCategoryObject.currency,
     money: getMoneyFromString(money)
   };
 }

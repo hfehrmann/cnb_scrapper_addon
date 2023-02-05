@@ -37,6 +37,7 @@ function itemTransformer(element, categoryObject) {
       business: getBusinessName(business),
       referenceNumber: referenceNumber,
       transactionDate: transactionDate,
+      currency: categoryObject.currency,
       money: getMoneyFromString(money)
     };
   } else {

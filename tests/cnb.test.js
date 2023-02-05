@@ -36,36 +36,42 @@ describe("CNB WebPage", () => {
             business: 'Foreign Transaction Fee',
             referenceNumber: '24692163025100218937207_ftr',
             transactionDate: '2023/01/26',
+            currency: 'USD',
             money: '0.22',
           },
           {
             business: 'Netflix.Com',
             referenceNumber: '24692163025100218937207',
             transactionDate: '2023/01/26',
+            currency: 'USD',
             money: '0.22',
           },
           {
             business: 'Uber Trip',
             referenceNumber: '24492153027717608073953',
             transactionDate: '2023/01/27',
+            currency: 'USD',
             money: '16.43',
           },
           {
             business: 'Uber Trip',
             referenceNumber: '24492153029717925171033',
             transactionDate: '2023/01/29',
+            currency: 'USD',
             money: '20.12',
           },
           {
             business: 'Uber Trip',
             referenceNumber: '24492153030719100021261',
             transactionDate: '2023/01/30',
+            currency: 'USD',
             money: '15.17',
           },
           {
             business: 'Uber Trip',
             referenceNumber: '24492153028715900346712',
             transactionDate: '2023/01/28',
+            currency: 'USD',
             money: '21.78',
           },
         ]
@@ -94,21 +100,25 @@ describe("CNB WebPage", () => {
           {
             business: 'Ubr* Pending.Uber.Com',
             transactionDate: '2023/01/28',
+            currency: 'USD(UNP)',
             money: '20.84',
           },
           {
             business: 'Ubr* Pending.Uber.Com',
             transactionDate: '2023/01/29',
+            currency: 'USD(UNP)',
             money: '20.84',
           },
           {
             business: 'Starbucks Store 02810',
             transactionDate: '2023/02/01',
+            currency: 'USD(UNP)',
             money: '18.21',
           },
           {
             business: 'Starbucks Store 02810',
             transactionDate: '2023/02/01',
+            currency: 'USD(UNP)',
             money: '8.56',
           },
         ]
