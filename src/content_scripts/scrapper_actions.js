@@ -22,7 +22,15 @@ export function processTransactions(
       }
 
       const joinedTable = missingTransactions
-        .map(payment => [payment.transactionDate, payment.business, '', '', '', payment.money].join('\t'))
+        .map(payment =>
+          [
+            payment.transactionDate,
+            payment.business,
+            '',
+            '',
+            payment.currency,
+            payment.money
+          ].join('\t'))
         .join('\n');
 
       copyToClipboardFunction(joinedTable)

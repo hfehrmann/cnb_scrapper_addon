@@ -55,10 +55,10 @@ describe("Process transactions", () => {
         (transactions) => {
           expect(transactions).toEqual(
             [
-              'D1\tB1\t\t\t\t12.34',
-              'D2\tB2\t\t\t\t12.34',
-              'D3\tB3\t\t\t\t12.34',
-              'D4\tB4\t\t\t\t12.34',
+              'D1\tB1\t\t\tC1\t12.34',
+              'D2\tB2\t\t\tC2\t12.34',
+              'D3\tB3\t\t\tC3\t12.34',
+              'D4\tB4\t\t\tC4\t12.34',
             ].join('\n')
           );
           return new Promise(r => {});
@@ -79,8 +79,8 @@ describe("Process transactions", () => {
         (transactions) => {
           expect(transactions).toEqual(
             [
-              'D2\tB2\t\t\t\t12.34',
-              'D4\tB4\t\t\t\t12.34',
+              'D2\tB2\t\t\tC2\t12.34',
+              'D4\tB4\t\t\tC4\t12.34',
             ].join('\n')
           );
           return new Promise(r => {});
