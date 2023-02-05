@@ -10,6 +10,7 @@ import {
     resetStoredReferenceNumbers,
 } from "content_scripts/scrapper_actions";
 
+// CNB
 import {
   transactionsExtractor as cnbTransactionsExtractor,
 } from "content_scripts/cnb/transactions_extractor";
@@ -18,6 +19,16 @@ import {
   postedCategoryObject as cnbPostedCategoryObject,
   pendingCategoryObject as cnbPendingCategoryObject,
 } from "content_scripts/cnb/category_objects";
+
+// AMEX
+import {
+  transactionsExtractor as amexTransactionsExtractor,
+} from "content_scripts/amex/transactions_extractor";
+
+import {
+  postedCategory as amexPostedCategory,
+  pendingCategory as amexPendingCategory,
+} from "content_scripts/amex/category_objects";
 
 import {
   CNB_WEBPAGE,
@@ -49,8 +60,12 @@ import * as actions from 'constants/actions'
       },
     },
     [AMEX_WEBPAGE]: {
-      [actions.POSTED]: () => [],
-      [actions.PENDING]: () => [],
+      [actions.POSTED]: (doc) => {
+        return amexTransactionsExtractor(doc, amexPostedCategory)
+      },
+      [actions.PENDING]: (doc) => {
+        return amexTransactionsExtractor(doc, amexPendingCategory)
+      },
     }
   }
 

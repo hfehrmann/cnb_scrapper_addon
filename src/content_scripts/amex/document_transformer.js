@@ -45,9 +45,6 @@ function itemTransformer(element, categoryObject) {
 }
 
 export function documentTransformer(doc, categoryObject) {
-  let tab = doc.querySelector("tbody")
-  console.log(tab.innerHTML)
-
   const rows = doc.querySelectorAll("div[data-module-name='axp-activity-feed'] div div.position-relative > div");
   const allTransactions = [...rows].map((element) => {
     return itemTransformer(element, categoryObject);
