@@ -4,6 +4,7 @@
   "description": "CNB small scrapper to get transaction. Personal use",
   "private": true,
   "scripts": {
+    "test_resource": "./scripts/test_resource.sh",
     "dev:firefox": "npx webpack --env browserType=FIREFOX --watch",
     "dev:chrome": "npx webpack --env browserType=CHROME --watch",
     "make:firefox": "npx webpack --env browserType=FIREFOX",
