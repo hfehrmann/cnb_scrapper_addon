@@ -45,6 +45,15 @@ const dummyData = [
   },
 ]
 
+class DummyStorage {
+  constructor() {
+    this.storage = {};
+  }
+
+  set(data) {
+    this.storage.set = data;
+  }
+}
 
 describe("Process transactions", () => {
   describe("given empty local storage", () => {
@@ -94,15 +103,19 @@ describe("Process transactions", () => {
   });
 
   describe("given some data in local storage", () => {
-    it("should save information in local storage", () => {
+    it("should save new information in local storage", () => {
+      let dummyStorage = new DummyStorage();
       processTransactions(
-        null,
+        dummyStorage,
         new Set(['1', '3']),
         () => {
           return new Promise(resolver => resolver(dummyData));
         },
-        false,
+        true,
         (transactions) => {
+          expect(dummyStorage.storage.set).toEqual(
+            {temporalReferenceNumbers: ['1', '3', '2', '4']},
+          );
           return new Promise(r => {});
         },
       );
