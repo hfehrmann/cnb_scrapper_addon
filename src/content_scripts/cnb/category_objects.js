@@ -1,5 +1,8 @@
 import { USD, USD_PENDING } from 'constants/currency'
 
+export const CNB_L = 'CNB(L)';
+export const CNB_H = 'CNB(H)';
+
 const monthMap = {
   'Jan': '01',
   'Feb': '02',
@@ -15,6 +18,19 @@ const monthMap = {
   'Dec': '12',
 };
 
+function matchTransactionData(transactionData, regex) {
+  let matchData = '';
+    for (let i = 0; i < transactionData.length; i++) {
+      const data = transactionData[i];
+      const regexMatch = regex.exec(data.textContent);
+      if (regexMatch != null) {
+        matchData = regexMatch[1];
+        break;
+      }
+    }
+    return matchData;
+}
+
 function getDateFromString(date) {
   const regex = /(\w+) (\d\d), (\d\d\d\d)/;
   const regexMatch = regex.exec(date);
@@ -24,34 +40,35 @@ function getDateFromString(date) {
   return `${year}/${monthMap[month]}/${day}`;
 }
 
+function getHolder(holder) {
+  if (holder.includes('L')) {
+    return CNB_L;
+  } else if (holder.includes('H')) {
+    return CNB_H;
+  } else {
+    return '';
+  }
+}
+
 export const postedCategoryObject = {
   tableID: 'mycardsPostedTransactionsTableMainTable',
   currency: USD,
   referenceNumberGetter: function (paymentData, transactionData) {
-    let referenceNumber = '';
-    for (let i = 0; i < transactionData.length; i++) {
-      const data = transactionData[i];
-      const regex = /Reference Number:(.*)/;
-      const regexMatch = regex.exec(data.textContent);
-      if (regexMatch != null) {
-        referenceNumber = regexMatch[1];
-        break;
-      }
-    }
-    return referenceNumber;
+    return matchTransactionData(transactionData, /Reference Number:(.*)/)
+  },
+  holderGetter: function (paymentData, transactionData) {
+    let holder = matchTransactionData(
+      transactionData,
+      /Card Name and Number:(.*)/,
+    );
+    return getHolder(holder)
   },
   dateGetter: function(paymentData, transactionData) {
-    let datePosted = '';
-    for (let i = 0; i < transactionData.length; i++) {
-      const data = transactionData[i];
-      const regex = /Transaction Date:(.*)/;
-      const regexMatch = regex.exec(data.textContent);
-      if (regexMatch != null) {
-        datePosted = regexMatch[1];
-        break;
-      }
-    }
-    return getDateFromString(datePosted);
+    let datePosted = matchTransactionData(
+      transactionData,
+      /Transaction Date:(.*)/,
+    );
+    return getDateFromString(datePosted)
   }
 };
 
@@ -61,17 +78,18 @@ export const pendingCategoryObject = {
   referenceNumberGetter: function (paymentData, transactionData) {
     return paymentData[2] + Math.random();
   },
+  holderGetter: function (paymentData, transactionData) {
+    let holder = matchTransactionData(
+      transactionData,
+      /Card Name and Number:(.*)/,
+    );
+    return getHolder(holder)
+  },
   dateGetter: function(paymentData, transactionData) {
-    let datePosted = '';
-    for (let i = 0; i < transactionData.length; i++) {
-      const data = transactionData[i];
-      const regex = /Transaction Date:(.*)/;
-      const regexMatch = regex.exec(data.textContent);
-      if (regexMatch != null) {
-        datePosted = regexMatch[1];
-        break;
-      }
-    }
-    return getDateFromString(datePosted);
+    let datePosted = matchTransactionData(
+      transactionData,
+      /Transaction Date:(.*)/,
+    );
+    return getDateFromString(datePosted)
   }
 };

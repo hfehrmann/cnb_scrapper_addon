@@ -21,10 +21,12 @@ function getBusinessName(name) {
 
 function itemTransformer(element, docCategoryObject) {
   const paymentData = element.querySelectorAll('td:not(:first-child)');
+
   const transactionDataRow = element.nextElementSibling;
   const transactionData = transactionDataRow.querySelectorAll('div p');
   const referenceNumber = docCategoryObject.referenceNumberGetter(paymentData, transactionData);
   const transactionDate = docCategoryObject.dateGetter(paymentData, transactionData);
+  const holder = docCategoryObject.holderGetter(paymentData, transactionData);
   const business = paymentData[2].textContent;
   const money = paymentData[5].querySelector('span').textContent;
 
@@ -36,6 +38,7 @@ function itemTransformer(element, docCategoryObject) {
     referenceNumber: referenceNumber + referenceNumberSufix,
     transactionDate: transactionDate,
     currency: docCategoryObject.currency,
+    holder: holder,
     money: getMoneyFromString(money)
   };
 }

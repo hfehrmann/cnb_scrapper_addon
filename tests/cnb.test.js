@@ -37,6 +37,7 @@ describe("CNB WebPage", () => {
             referenceNumber: '24692163025100218937207_ftr',
             transactionDate: '2023/01/26',
             currency: 'USD',
+            holder: 'CNB(H)',
             money: '0.22',
           },
           {
@@ -44,6 +45,7 @@ describe("CNB WebPage", () => {
             referenceNumber: '24692163025100218937207',
             transactionDate: '2023/01/26',
             currency: 'USD',
+            holder: 'CNB(H)',
             money: '0.22',
           },
           {
@@ -51,6 +53,7 @@ describe("CNB WebPage", () => {
             referenceNumber: '24492153027717608073953',
             transactionDate: '2023/01/27',
             currency: 'USD',
+            holder: 'CNB(H)',
             money: '16.43',
           },
           {
@@ -58,6 +61,7 @@ describe("CNB WebPage", () => {
             referenceNumber: '24492153029717925171033',
             transactionDate: '2023/01/29',
             currency: 'USD',
+            holder: 'CNB(H)',
             money: '20.12',
           },
           {
@@ -65,6 +69,7 @@ describe("CNB WebPage", () => {
             referenceNumber: '24492153030719100021261',
             transactionDate: '2023/01/30',
             currency: 'USD',
+            holder: 'CNB(H)',
             money: '15.17',
           },
           {
@@ -72,6 +77,7 @@ describe("CNB WebPage", () => {
             referenceNumber: '24492153028715900346712',
             transactionDate: '2023/01/28',
             currency: 'USD',
+            holder: 'CNB(L)',
             money: '21.78',
           },
         ]
@@ -101,24 +107,28 @@ describe("CNB WebPage", () => {
             business: 'Ubr* Pending.Uber.Com',
             transactionDate: '2023/01/28',
             currency: 'USD(UNP)',
+            holder: 'CNB(H)',
             money: '20.84',
           },
           {
             business: 'Ubr* Pending.Uber.Com',
             transactionDate: '2023/01/29',
             currency: 'USD(UNP)',
+            holder: 'CNB(H)',
             money: '20.84',
           },
           {
             business: 'Starbucks Store 02810',
             transactionDate: '2023/02/01',
             currency: 'USD(UNP)',
+            holder: 'CNB(L)',
             money: '18.21',
           },
           {
             business: 'Starbucks Store 02810',
             transactionDate: '2023/02/01',
             currency: 'USD(UNP)',
+            holder: 'CNB(L)',
             money: '8.56',
           },
         ]
