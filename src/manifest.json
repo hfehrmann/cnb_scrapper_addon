@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "CNB_scrapper",
-  "version": "0.1",
+  "version": "0.2",
   "description": "Scrap CNB content and it delivers it in a more friendly format. You can select between posted transactions or in progress ones",
   "icons": {
     "48": "icons/icon-48.png",
