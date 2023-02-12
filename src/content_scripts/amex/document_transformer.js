@@ -1,5 +1,23 @@
 
-import { PENDING, POSTED } from 'content_scripts/amex/category_objects'
+import {
+  PENDING,
+  POSTED,
+  PLATINUM,
+  EVERYDAY
+} from 'content_scripts/amex/category_objects'
+
+function getHolder(doc) {
+  const holderContainer = doc.querySelector("section[data-module-name=axp-account-switcher] img");
+  const altText = holderContainer.alt.toLowerCase();
+  if (altText.includes('platinum')) {
+    return PLATINUM;
+  } else if (altText.includes('everyday')) {
+    return EVERYDAY;
+  } else {
+    return '';
+  }
+
+}
 
 function getMoneyFromString(moneyString) {
   const regex = /(-?)\(?.?([\d,]+\.\d+)\)?/;
@@ -38,6 +56,7 @@ function itemTransformer(element, categoryObject) {
       referenceNumber: referenceNumber,
       transactionDate: transactionDate,
       currency: categoryObject.currency,
+      holder: categoryObject.holder,
       money: getMoneyFromString(money)
     };
   } else {
@@ -46,6 +65,7 @@ function itemTransformer(element, categoryObject) {
 }
 
 export function documentTransformer(doc, categoryObject) {
+  categoryObject.holder = getHolder(doc);
   const rows = doc.querySelectorAll("div[data-module-name='axp-activity-feed'] div div.position-relative > div");
   const allTransactions = [...rows].map((element) => {
     return itemTransformer(element, categoryObject);
