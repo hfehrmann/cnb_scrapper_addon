@@ -21,7 +21,7 @@ const { JSDOM } = jsdom;
 describe("Amex WebPage", () => {
   describe("Posted transactions", () => {
     it("will extract relevant data from it in reverse order (first row is last)", () => {
-      const file_path = "tests/resources/htmls/amex/amex.html";
+      const file_path = "tests/resources/htmls/amex.html";
       const file = readFileSync(file_path, "utf8");
       const dom = new JSDOM(file);
 
@@ -79,7 +79,7 @@ describe("Amex WebPage", () => {
 
   describe("Pending transactions", () => {
     it("will extract relevant data from it in reverse order (first row is last)", () => {
-      const file_path = "tests/resources/htmls/amex/amex.html";
+      const file_path = "tests/resources/htmls/amex.html";
       const file = readFileSync(file_path, "utf8");
       const dom = new JSDOM(file);
 
