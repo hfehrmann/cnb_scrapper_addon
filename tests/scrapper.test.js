@@ -16,6 +16,7 @@ const dummyData = [
     referenceNumber: '1',
     transactionDate: 'D1',
     currency: 'C1',
+    holder: 'H1',
     money: '12.34',
   },
   {
@@ -23,6 +24,7 @@ const dummyData = [
     referenceNumber: '2',
     transactionDate: 'D2',
     currency: 'C2',
+    holder: 'H2',
     money: '12.34',
   },
   {
@@ -30,6 +32,7 @@ const dummyData = [
     referenceNumber: '3',
     transactionDate: 'D3',
     currency: 'C3',
+    holder: 'H3',
     money: '12.34',
   },
   {
@@ -37,6 +40,7 @@ const dummyData = [
     referenceNumber: '4',
     transactionDate: 'D4',
     currency: 'C4',
+    holder: 'H4',
     money: '12.34',
   },
 ]
@@ -55,10 +59,10 @@ describe("Process transactions", () => {
         (transactions) => {
           expect(transactions).toEqual(
             [
-              'D1\tB1\t\t\tC1\t12.34',
-              'D2\tB2\t\t\tC2\t12.34',
-              'D3\tB3\t\t\tC3\t12.34',
-              'D4\tB4\t\t\tC4\t12.34',
+              'D1\tB1\t\t\tH1\tC1\t12.34',
+              'D2\tB2\t\t\tH2\tC2\t12.34',
+              'D3\tB3\t\t\tH3\tC3\t12.34',
+              'D4\tB4\t\t\tH4\tC4\t12.34',
             ].join('\n')
           );
           return new Promise(r => {});
@@ -79,8 +83,8 @@ describe("Process transactions", () => {
         (transactions) => {
           expect(transactions).toEqual(
             [
-              'D2\tB2\t\t\tC2\t12.34',
-              'D4\tB4\t\t\tC4\t12.34',
+              'D2\tB2\t\t\tH2\tC2\t12.34',
+              'D4\tB4\t\t\tH4\tC4\t12.34',
             ].join('\n')
           );
           return new Promise(r => {});

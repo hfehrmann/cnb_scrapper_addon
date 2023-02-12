@@ -28,6 +28,7 @@ export function processTransactions(
             payment.business,
             '',
             '',
+            payment.holder,
             payment.currency,
             payment.money
           ].join('\t'))
