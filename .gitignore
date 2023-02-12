@@ -3,4 +3,6 @@ dist/
 node_modules/
 web-ext-artifacts/
 scripts/.secret.*.txt
-tests/resources/
+tests/resources/*
+!tests/resources/htmls.7z
+!tests/resources/htmls.checksum

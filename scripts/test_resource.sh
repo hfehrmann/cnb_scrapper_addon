@@ -1,8 +1,8 @@
 
 ENCRYPTION_MESSAGE="Look for \"op item get ScrapperAddon --fields label='Resources password'\" in 1Password"
 
-CHECKSUM_FOLDER_CONTAINER="tests"
-CHECKSUM_FOLDER="resources"
+CHECKSUM_FOLDER_CONTAINER="tests/resources"
+CHECKSUM_FOLDER="htmls"
 CHECKSUM_FUNCTION="find -s $CHECKSUM_FOLDER_CONTAINER/$CHECKSUM_FOLDER -type f -exec shasum -a 256 {} \\; | grep -v .DS_Store | shasum -a 256"
 CHECKSUM_FILE="$CHECKSUM_FOLDER_CONTAINER/${CHECKSUM_FOLDER}.checksum"
 

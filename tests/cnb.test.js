@@ -21,7 +21,7 @@ const { JSDOM } = jsdom;
 describe("CNB WebPage", () => {
   describe("Posted transaction with expanded html", () => {
     it("will extract relevant data from it in reverse order (first row is last)", () => {
-      const file_path = "tests/resources/cnb/cnb_posted_expanded.html";
+      const file_path = "tests/resources/htmls/cnb/cnb_posted_expanded.html";
       const file = readFileSync(file_path, "utf8");
       const dom = new JSDOM(file);
 
@@ -81,7 +81,7 @@ describe("CNB WebPage", () => {
 
   describe("Pending transaction with expanded html", () => {
     it("will extract relevant data from it in reverse order (first row is last)", () => {
-      const file_path = "tests/resources/cnb/cnb_pending_expanded.html";
+      const file_path = "tests/resources/htmls/cnb/cnb_pending_expanded.html";
       const file = readFileSync(file_path, "utf8");
       const dom = new JSDOM(file);
 
