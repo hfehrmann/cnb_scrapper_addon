@@ -1,39 +1,39 @@
-import browser from "webextension-polyfill";
+import browser from 'webextension-polyfill';
 import {
   container,
   mCopyToClipboard,
-} from "browser_dep";
+} from 'browser_dep';
 
 import {
     processTransactions,
     promoteStoredReferenceNumbers,
     resetStoredReferenceNumbers,
-} from "content_scripts/scrapper_actions";
+} from 'content_scripts/scrapper_actions';
 
 // CNB
 import {
   transactionsExtractor as cnbTransactionsExtractor,
-} from "content_scripts/cnb/transactions_extractor";
+} from 'content_scripts/cnb/transactions_extractor';
 
 import {
   postedCategoryObject as cnbPostedCategoryObject,
   pendingCategoryObject as cnbPendingCategoryObject,
-} from "content_scripts/cnb/category_objects";
+} from 'content_scripts/cnb/category_objects';
 
 // AMEX
 import {
   transactionsExtractor as amexTransactionsExtractor,
-} from "content_scripts/amex/transactions_extractor";
+} from 'content_scripts/amex/transactions_extractor';
 
 import {
   postedCategory as amexPostedCategory,
   pendingCategory as amexPendingCategory,
-} from "content_scripts/amex/category_objects";
+} from 'content_scripts/amex/category_objects';
 
 import {
   CNB_WEBPAGE,
   AMEX_WEBPAGE,
-} from "constants/webpage";
+} from 'constants/webpage';
 
 import * as actions from 'constants/actions';
 

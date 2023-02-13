@@ -16,13 +16,13 @@ function listenForClicks (activeTab, webpage) {
     }
   });
 
-  document.getElementById("promote").addEventListener('click', (e) => {
+  document.getElementById('promote').addEventListener('click', (e) => {
     browser.tabs.sendMessage(activeTab.id, {
       command: actions.PROMOTE,
     });
    });
 
-  document.getElementById("reset").addEventListener('click', (e) => {
+  document.getElementById('reset').addEventListener('click', (e) => {
     browser.tabs.sendMessage(activeTab.id, {
       command: actions.RESET,
     });
@@ -35,7 +35,7 @@ browser.tabs.query({ active: true, currentWindow: true })
   const matcher = allowedURL(activeTab.url);
   matcher.then(webpage => {
     browser.tabs
-      .executeScript({ file: "scrapper.js" })
+      .executeScript({ file: 'scrapper.js' })
       .then(() => listenForClicks(activeTab, webpage))
       .catch(error => console.log('Error: ' + error));
   });

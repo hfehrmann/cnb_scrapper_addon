@@ -1,4 +1,4 @@
-import { documentTransformer } from "content_scripts/cnb/document_transformer";
+import { documentTransformer } from 'content_scripts/cnb/document_transformer';
 
 export function transactionsExtractor(doc, docCategoryObject) {
   return new Promise((resolver) => {

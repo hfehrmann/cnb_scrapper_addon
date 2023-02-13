@@ -10,7 +10,7 @@ function getMoneyFromString(moneyString) {
 }
 
 function getBusinessName(name) {
-  let trimmedName = name.replace(/\s+/g," ");
+  let trimmedName = name.replace(/\s+/g,' ');
   return trimmedName.replace(
     /\b\w+\b/g,
     function(txt) {

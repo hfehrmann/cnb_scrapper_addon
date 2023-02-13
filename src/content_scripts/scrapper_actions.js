@@ -36,7 +36,7 @@ export function processTransactions(
 
       copyToClipboardFunction(joinedTable)
         .then(() => {
-          alert("successfully copied");
+          alert('successfully copied');
         })
         .catch((error) => {
           console.log(error);
@@ -53,13 +53,13 @@ export function promoteStoredReferenceNumbers(localStorage) {
       });
     })
     .then(() => {
-      alert("Promoted!");
+      alert('Promoted!');
     });
 }
 
 export function resetStoredReferenceNumbers(localStorage, defaultStorageData) {
   localStorage.set(defaultStorageData)
     .then(() => {
-      alert("Reset!");
+      alert('Reset!');
     });
 }

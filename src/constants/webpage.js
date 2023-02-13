@@ -1,5 +1,5 @@
-export const CNB_WEBPAGE = "cnb";
-export const AMEX_WEBPAGE = "amex";
+export const CNB_WEBPAGE = 'cnb';
+export const AMEX_WEBPAGE = 'amex';
 
 const cnbMatcher = {
   webpage: CNB_WEBPAGE,
