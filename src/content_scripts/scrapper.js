@@ -66,12 +66,12 @@ import * as actions from 'constants/actions';
       [actions.PENDING]: (doc) => {
         return amexTransactionsExtractor(doc, amexPendingCategory);
       },
-    }
+    },
   };
 
   let defaultStorageData = {
     referenceNumbers: [],
-    temporalReferenceNumbers: []
+    temporalReferenceNumbers: [],
   };
   let localStorage = browser.storage.local;
 
@@ -103,7 +103,7 @@ import * as actions from 'constants/actions';
               storedReferenceNumbers,
               transactionExtractorMap[webpage][actions.PENDING],
               false,
-              mCopyToClipboard
+              mCopyToClipboard,
             );
           }
         });

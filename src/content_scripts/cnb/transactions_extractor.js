@@ -16,7 +16,7 @@ export function transactionsExtractor(doc, docCategoryObject) {
 
     observer.observe(document.querySelector(`#${docCategoryObject.tableID}`), {
       childList: true,
-      subtree: true
+      subtree: true,
     });
 
     rows.forEach((element) => {

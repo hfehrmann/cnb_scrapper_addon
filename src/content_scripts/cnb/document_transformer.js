@@ -15,7 +15,7 @@ function getBusinessName(name) {
     /\b\w+\b/g,
     function(txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    }
+    },
   );
 }
 
@@ -39,7 +39,7 @@ function itemTransformer(element, docCategoryObject) {
     transactionDate: transactionDate,
     currency: docCategoryObject.currency,
     holder: holder,
-    money: getMoneyFromString(money)
+    money: getMoneyFromString(money),
   };
 }
 

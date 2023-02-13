@@ -3,7 +3,7 @@ import {
   PENDING,
   POSTED,
   PLATINUM,
-  EVERYDAY
+  EVERYDAY,
 } from 'content_scripts/amex/category_objects';
 
 function getHolder(doc) {
@@ -33,7 +33,7 @@ function getBusinessName(name) {
     /\b\w+\b/g,
     function(txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    }
+    },
   );
 }
 
@@ -57,7 +57,7 @@ function itemTransformer(element, categoryObject) {
       transactionDate: transactionDate,
       currency: categoryObject.currency,
       holder: categoryObject.holder,
-      money: getMoneyFromString(money)
+      money: getMoneyFromString(money),
     };
   } else {
     return null;

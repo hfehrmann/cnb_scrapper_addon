@@ -17,7 +17,7 @@ export function processTransactions(
       });
       if (shouldAddReferenceInTemporalStorage) {
         localStorage.set({
-          temporalReferenceNumbers: Array.from(storedReferenceNumbers)
+          temporalReferenceNumbers: Array.from(storedReferenceNumbers),
         });
       }
 
@@ -30,7 +30,7 @@ export function processTransactions(
             '',
             payment.holder,
             payment.currency,
-            payment.money
+            payment.money,
           ].join('\t'))
         .join('\n');
 
@@ -49,7 +49,7 @@ export function promoteStoredReferenceNumbers(localStorage) {
     .then(storedData => {
       return localStorage.set({
         referenceNumbers: storedData.temporalReferenceNumbers,
-        temporalReferenceNumbers: []
+        temporalReferenceNumbers: [],
       });
     })
     .then(() => {

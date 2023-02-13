@@ -69,7 +69,7 @@ export const postedCategoryObject = {
       /Transaction Date:(.*)/,
     );
     return getDateFromString(datePosted);
-  }
+  },
 };
 
 export const pendingCategoryObject = {
@@ -91,5 +91,5 @@ export const pendingCategoryObject = {
       /Transaction Date:(.*)/,
     );
     return getDateFromString(datePosted);
-  }
+  },
 };
