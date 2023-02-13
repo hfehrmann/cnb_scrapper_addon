@@ -1,8 +1,8 @@
-import browser from "webextension-polyfill"
+import browser from "webextension-polyfill";
 import {
   container,
   mCopyToClipboard,
-} from "browser_dep"
+} from "browser_dep";
 
 import {
     processTransactions,
@@ -33,12 +33,12 @@ import {
 import {
   CNB_WEBPAGE,
   AMEX_WEBPAGE,
-} from "constants/webpage"
+} from "constants/webpage";
 
-import * as actions from 'constants/actions'
+import * as actions from 'constants/actions';
 
 (() => {
-  'use strict'
+  'use strict';
 
   /**
    * Check and set a global guard variable.
@@ -53,21 +53,21 @@ import * as actions from 'constants/actions'
   const transactionExtractorMap = {
     [CNB_WEBPAGE]: {
       [actions.POSTED]: (doc) => {
-        return cnbTransactionsExtractor(doc, cnbPostedCategoryObject)
+        return cnbTransactionsExtractor(doc, cnbPostedCategoryObject);
       },
       [actions.PENDING]: (doc) => {
-        return cnbTransactionsExtractor(doc, cnbPendingCategoryObject)
+        return cnbTransactionsExtractor(doc, cnbPendingCategoryObject);
       },
     },
     [AMEX_WEBPAGE]: {
       [actions.POSTED]: (doc) => {
-        return amexTransactionsExtractor(doc, amexPostedCategory)
+        return amexTransactionsExtractor(doc, amexPostedCategory);
       },
       [actions.PENDING]: (doc) => {
-        return amexTransactionsExtractor(doc, amexPendingCategory)
+        return amexTransactionsExtractor(doc, amexPendingCategory);
       },
     }
-  }
+  };
 
   let defaultStorageData = {
     referenceNumbers: [],

@@ -1,4 +1,4 @@
-import { USD, USD_PENDING } from 'constants/currency'
+import { USD, USD_PENDING } from 'constants/currency';
 
 export const CNB_L = 'CNB(L)';
 export const CNB_H = 'CNB(H)';
@@ -54,21 +54,21 @@ export const postedCategoryObject = {
   tableID: 'mycardsPostedTransactionsTableMainTable',
   currency: USD,
   referenceNumberGetter: function (paymentData, transactionData) {
-    return matchTransactionData(transactionData, /Reference Number:(.*)/)
+    return matchTransactionData(transactionData, /Reference Number:(.*)/);
   },
   holderGetter: function (paymentData, transactionData) {
     let holder = matchTransactionData(
       transactionData,
       /Card Name and Number:(.*)/,
     );
-    return getHolder(holder)
+    return getHolder(holder);
   },
   dateGetter: function(paymentData, transactionData) {
     let datePosted = matchTransactionData(
       transactionData,
       /Transaction Date:(.*)/,
     );
-    return getDateFromString(datePosted)
+    return getDateFromString(datePosted);
   }
 };
 
@@ -83,13 +83,13 @@ export const pendingCategoryObject = {
       transactionData,
       /Card Name and Number:(.*)/,
     );
-    return getHolder(holder)
+    return getHolder(holder);
   },
   dateGetter: function(paymentData, transactionData) {
     let datePosted = matchTransactionData(
       transactionData,
       /Transaction Date:(.*)/,
     );
-    return getDateFromString(datePosted)
+    return getDateFromString(datePosted);
   }
 };

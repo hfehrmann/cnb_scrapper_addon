@@ -1,9 +1,9 @@
-import css from './popup.css'
-import browser from 'webextension-polyfill'
+import css from './popup.css';
+import browser from 'webextension-polyfill';
 
-import * as actions from 'constants/actions.js'
+import * as actions from 'constants/actions.js';
 
-import { allowedURL } from 'constants/webpage'
+import { allowedURL } from 'constants/webpage';
 
 function listenForClicks (activeTab, webpage) {
   document.addEventListener('click', (e) => {

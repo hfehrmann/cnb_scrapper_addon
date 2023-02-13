@@ -10,11 +10,11 @@ export function processTransactions(
     .then((transactions) => {
       const missingTransactions = transactions
         .filter(transaction => {
-          return !storedReferenceNumbers.has(transaction.referenceNumber)
+          return !storedReferenceNumbers.has(transaction.referenceNumber);
         });
       missingTransactions.forEach(transaction => {
-        storedReferenceNumbers.add(transaction.referenceNumber)
-      })
+        storedReferenceNumbers.add(transaction.referenceNumber);
+      });
       if (shouldAddReferenceInTemporalStorage) {
         localStorage.set({
           temporalReferenceNumbers: Array.from(storedReferenceNumbers)
@@ -50,7 +50,7 @@ export function promoteStoredReferenceNumbers(localStorage) {
       return localStorage.set({
         referenceNumbers: storedData.temporalReferenceNumbers,
         temporalReferenceNumbers: []
-      })
+      });
     })
     .then(() => {
       alert("Promoted!");
@@ -61,5 +61,5 @@ export function resetStoredReferenceNumbers(localStorage, defaultStorageData) {
   localStorage.set(defaultStorageData)
     .then(() => {
       alert("Reset!");
-    })
+    });
 }

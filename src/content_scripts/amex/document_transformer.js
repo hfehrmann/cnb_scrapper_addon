@@ -4,7 +4,7 @@ import {
   POSTED,
   PLATINUM,
   EVERYDAY
-} from 'content_scripts/amex/category_objects'
+} from 'content_scripts/amex/category_objects';
 
 function getHolder(doc) {
   const holderContainer = doc.querySelector("section[data-module-name=axp-account-switcher] img");
@@ -22,7 +22,7 @@ function getHolder(doc) {
 function getMoneyFromString(moneyString) {
   const regex = /(-?)\(?.?([\d,]+\.\d+)\)?/;
   const matches = regex.exec(moneyString);
-  const sign = matches[1]
+  const sign = matches[1];
   const money = matches[2];
   return sign + money.replace(',', '');
 }
@@ -71,6 +71,6 @@ export function documentTransformer(doc, categoryObject) {
     return itemTransformer(element, categoryObject);
   });
   const transactions = allTransactions.filter(x => x);
-  transactions.reverse()
+  transactions.reverse();
   return transactions;
 }

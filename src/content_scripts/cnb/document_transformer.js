@@ -4,7 +4,7 @@ const FOREIGN_TRANSACTION_FEE_BUSINESS = 'FOREIGN TRANSACTION FEE';
 function getMoneyFromString(moneyString) {
   const regex = /(-?)\(?.?([\d,]+\.\d+)\)?/;
   const matches = regex.exec(moneyString);
-  const sign = matches[1]
+  const sign = matches[1];
   const money = matches[2];
   return sign + money.replace(',', '');
 }
@@ -48,6 +48,6 @@ export function documentTransformer(doc, docCategoryObject) {
   const transactions = [...rows].map((element) => {
     return itemTransformer(element, docCategoryObject);
   });
-  transactions.reverse()
+  transactions.reverse();
   return transactions;
 }
