@@ -11,5 +11,14 @@ module.exports = {
     sourceType: 'module'
   },
   rules: {
-  }
+    "comma-dangle": ["error", "always-multiline"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "space-before-function-paren": ["error", {
+      "anonymous": "always",
+      "named": "never",
+      "asyncArrow": "always"
+    }],
+  },
+  "ignorePatterns": ["dist/**/*"]
 }
