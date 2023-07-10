@@ -1,18 +1,17 @@
 /**
  * @jest-environment jsdom
  */
+import { documentTransformer } from 'content_scripts/amex/document_transformer';
+import {
+  pendingCategory,
+  postedCategory,
+} from 'content_scripts/amex/category_objects';
 
 // jsdom has a problem when setting jest-environment into jsdom ¯\_(ツ)_/¯
 // https://github.com/jsdom/whatwg-url/issues/209#issuecomment-1015559283
 import { TextEncoder, TextDecoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-
-import { documentTransformer } from 'content_scripts/amex/document_transformer';
-import {
-  pendingCategory,
-  postedCategory,
-} from 'content_scripts/amex/category_objects';
 
 const { readFileSync } = require('fs');
 const jsdom = require('jsdom');
@@ -21,8 +20,8 @@ const { JSDOM } = jsdom;
 describe('Amex WebPage', () => {
   describe('Posted transactions', () => {
     it('will extract relevant data from it in reverse order (first row is last)', () => {
-      const file_path = 'tests/resources/htmls/amex.html';
-      const file = readFileSync(file_path, 'utf8');
+      const filePath = 'tests/resources/htmls/amex.html';
+      const file = readFileSync(filePath, 'utf8');
       const dom = new JSDOM(file);
 
       const transactions = documentTransformer(
@@ -72,15 +71,15 @@ describe('Amex WebPage', () => {
             holder: 'AMEX(P)',
             money: '99.21',
           },
-        ]
-      )
+        ],
+      );
     });
   });
 
   describe('Pending transactions', () => {
     it('will extract relevant data from it in reverse order (first row is last)', () => {
-      const file_path = 'tests/resources/htmls/amex.html';
-      const file = readFileSync(file_path, 'utf8');
+      const filePath = 'tests/resources/htmls/amex.html';
+      const file = readFileSync(filePath, 'utf8');
       const dom = new JSDOM(file);
 
       const transactions = documentTransformer(
@@ -122,8 +121,8 @@ describe('Amex WebPage', () => {
             holder: 'AMEX(P)',
             money: '11.09',
           },
-        ]
-      )
+        ],
+      );
     });
   });
 });

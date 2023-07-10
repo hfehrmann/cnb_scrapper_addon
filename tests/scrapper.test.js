@@ -1,14 +1,13 @@
 /**
  * @jest-environment jsdom
  */
+import { processTransactions } from 'content_scripts/scrapper_actions';
 
 // jsdom has a problem when setting jest-environment into jsdom ¯\_(ツ)_/¯
 // https://github.com/jsdom/whatwg-url/issues/209#issuecomment-1015559283
 import { TextEncoder, TextDecoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-
-import { processTransactions } from 'content_scripts/scrapper_actions';
 
 const dummyData = [
   {
@@ -62,7 +61,7 @@ describe('Process transactions', () => {
         null,
         new Set(),
         () => {
-          return new Promise(resolver => resolver(dummyData));
+          return new Promise(resolve => resolve(dummyData));
         },
         false,
         (transactions) => {
@@ -72,9 +71,9 @@ describe('Process transactions', () => {
               'D2\tB2\t\t\tH2\tC2\t12.34',
               'D3\tB3\t\t\tH3\tC3\t12.34',
               'D4\tB4\t\t\tH4\tC4\t12.34',
-            ].join('\n')
+            ].join('\n'),
           );
-          return new Promise(r => {});
+          return new Promise(_resolve => {});
         },
       );
     });
@@ -86,7 +85,7 @@ describe('Process transactions', () => {
         null,
         new Set(['1', '3']),
         () => {
-          return new Promise(resolver => resolver(dummyData));
+          return new Promise(resolve => resolve(dummyData));
         },
         false,
         (transactions) => {
@@ -94,9 +93,9 @@ describe('Process transactions', () => {
             [
               'D2\tB2\t\t\tH2\tC2\t12.34',
               'D4\tB4\t\t\tH4\tC4\t12.34',
-            ].join('\n')
+            ].join('\n'),
           );
-          return new Promise(r => {});
+          return new Promise(_resolve => {});
         },
       );
     });
@@ -104,21 +103,21 @@ describe('Process transactions', () => {
 
   describe('given some data in local storage', () => {
     it('should save new information in local storage', () => {
-      let dummyStorage = new DummyStorage();
+      const dummyStorage = new DummyStorage();
       processTransactions(
         dummyStorage,
         new Set(['1', '3']),
         () => {
-          return new Promise(resolver => resolver(dummyData));
+          return new Promise(resolve => resolve(dummyData));
         },
         true,
         (transactions) => {
           expect(dummyStorage.storage.set).toEqual(
-            {temporalReferenceNumbers: ['1', '3', '2', '4']},
+            { temporalReferenceNumbers: ['1', '3', '2', '4'] },
           );
-          return new Promise(r => {});
+          return new Promise(_resolve => {});
         },
       );
     });
   });
-})
+});

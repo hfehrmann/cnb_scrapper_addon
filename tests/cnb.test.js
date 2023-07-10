@@ -1,18 +1,17 @@
 /**
  * @jest-environment jsdom
  */
+import { documentTransformer } from 'content_scripts/cnb/document_transformer';
+import {
+  postedCategoryObject,
+  pendingCategoryObject,
+} from 'content_scripts/cnb/category_objects';
 
 // jsdom has a problem when setting jest-environment into jsdom ¯\_(ツ)_/¯
 // https://github.com/jsdom/whatwg-url/issues/209#issuecomment-1015559283
 import { TextEncoder, TextDecoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-
-import { documentTransformer } from 'content_scripts/cnb/document_transformer';
-import {
-  postedCategoryObject,
-  pendingCategoryObject,
-} from 'content_scripts/cnb/category_objects';
 
 const { readFileSync } = require('fs');
 const jsdom = require('jsdom');
@@ -21,8 +20,8 @@ const { JSDOM } = jsdom;
 describe('CNB WebPage', () => {
   describe('Posted transaction with expanded html', () => {
     it('will extract relevant data from it in reverse order (first row is last)', () => {
-      const file_path = 'tests/resources/htmls/cnb.html';
-      const file = readFileSync(file_path, 'utf8');
+      const filePath = 'tests/resources/htmls/cnb.html';
+      const file = readFileSync(filePath, 'utf8');
       const dom = new JSDOM(file);
 
       const transactions = documentTransformer(
@@ -80,15 +79,15 @@ describe('CNB WebPage', () => {
             holder: 'CNB(L)',
             money: '21.78',
           },
-        ]
-      )
+        ],
+      );
     });
   });
 
   describe('Pending transaction with expanded html', () => {
     it('will extract relevant data from it in reverse order (first row is last)', () => {
-      const file_path = 'tests/resources/htmls/cnb.html';
-      const file = readFileSync(file_path, 'utf8');
+      const filePath = 'tests/resources/htmls/cnb.html';
+      const file = readFileSync(filePath, 'utf8');
       const dom = new JSDOM(file);
 
       const transactions = documentTransformer(
@@ -97,9 +96,9 @@ describe('CNB WebPage', () => {
       );
 
       const filteredTransactions = transactions.map(e => {
-        let {referenceNumber, ...data} = {...e};
+        const { referenceNumber, ...data } = { ...e };
         return data;
-      })
+      });
 
       expect(filteredTransactions).toEqual(
         [
@@ -131,8 +130,8 @@ describe('CNB WebPage', () => {
             holder: 'CNB(L)',
             money: '8.56',
           },
-        ]
-      )
+        ],
+      );
     });
   });
 });
