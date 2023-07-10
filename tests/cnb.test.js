@@ -8,21 +8,21 @@ import { TextEncoder, TextDecoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
-import { documentTransformer } from "content_scripts/cnb/document_transformer";
+import { documentTransformer } from 'content_scripts/cnb/document_transformer';
 import {
   postedCategoryObject,
   pendingCategoryObject,
-} from "content_scripts/cnb/category_objects";
+} from 'content_scripts/cnb/category_objects';
 
-const { readFileSync } = require("fs");
-const jsdom = require("jsdom");
+const { readFileSync } = require('fs');
+const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
-describe("CNB WebPage", () => {
-  describe("Posted transaction with expanded html", () => {
-    it("will extract relevant data from it in reverse order (first row is last)", () => {
-      const file_path = "tests/resources/htmls/cnb.html";
-      const file = readFileSync(file_path, "utf8");
+describe('CNB WebPage', () => {
+  describe('Posted transaction with expanded html', () => {
+    it('will extract relevant data from it in reverse order (first row is last)', () => {
+      const file_path = 'tests/resources/htmls/cnb.html';
+      const file = readFileSync(file_path, 'utf8');
       const dom = new JSDOM(file);
 
       const transactions = documentTransformer(
@@ -85,10 +85,10 @@ describe("CNB WebPage", () => {
     });
   });
 
-  describe("Pending transaction with expanded html", () => {
-    it("will extract relevant data from it in reverse order (first row is last)", () => {
-      const file_path = "tests/resources/htmls/cnb.html";
-      const file = readFileSync(file_path, "utf8");
+  describe('Pending transaction with expanded html', () => {
+    it('will extract relevant data from it in reverse order (first row is last)', () => {
+      const file_path = 'tests/resources/htmls/cnb.html';
+      const file = readFileSync(file_path, 'utf8');
       const dom = new JSDOM(file);
 
       const transactions = documentTransformer(

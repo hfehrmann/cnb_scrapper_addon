@@ -8,7 +8,7 @@ import { TextEncoder, TextDecoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
-import { processTransactions } from 'content_scripts/scrapper_actions'
+import { processTransactions } from 'content_scripts/scrapper_actions';
 
 const dummyData = [
   {
@@ -43,7 +43,7 @@ const dummyData = [
     holder: 'H4',
     money: '12.34',
   },
-]
+];
 
 class DummyStorage {
   constructor() {
@@ -55,9 +55,9 @@ class DummyStorage {
   }
 }
 
-describe("Process transactions", () => {
-  describe("given empty local storage", () => {
-    it("should pass all information into clipboard", () => {
+describe('Process transactions', () => {
+  describe('given empty local storage', () => {
+    it('should pass all information into clipboard', () => {
       processTransactions(
         null,
         new Set(),
@@ -80,8 +80,8 @@ describe("Process transactions", () => {
     });
   });
 
-  describe("given some data in local storage", () => {
-    it("should pass all information into clipboard", () => {
+  describe('given some data in local storage', () => {
+    it('should pass all information into clipboard', () => {
       processTransactions(
         null,
         new Set(['1', '3']),
@@ -102,8 +102,8 @@ describe("Process transactions", () => {
     });
   });
 
-  describe("given some data in local storage", () => {
-    it("should save new information in local storage", () => {
+  describe('given some data in local storage', () => {
+    it('should save new information in local storage', () => {
       let dummyStorage = new DummyStorage();
       processTransactions(
         dummyStorage,

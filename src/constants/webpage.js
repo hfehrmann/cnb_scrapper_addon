@@ -18,10 +18,10 @@ const amexMatcher = {
 export function allowedURL(url) {
   const allowedWebpages = [cnbMatcher, amexMatcher];
 
-  return new Promise((resolver) => {
+  return new Promise((resolve) => {
     allowedWebpages.forEach(webpage => {
       if (webpage.urlMatcher(url)) {
-        resolver(webpage.webpage);
+        resolve(webpage.webpage);
       }
     });
   });

@@ -4,31 +4,31 @@ export const CNB_L = 'CNB(L)';
 export const CNB_H = 'CNB(H)';
 
 const monthMap = {
-  'Jan': '01',
-  'Feb': '02',
-  'Mar': '03',
-  'Apr': '04',
-  'May': '05',
-  'Jun': '06',
-  'Jul': '07',
-  'Aug': '08',
-  'Sep': '09',
-  'Oct': '10',
-  'Nov': '11',
-  'Dec': '12',
+  Jan: '01',
+  Feb: '02',
+  Mar: '03',
+  Apr: '04',
+  May: '05',
+  Jun: '06',
+  Jul: '07',
+  Aug: '08',
+  Sep: '09',
+  Oct: '10',
+  Nov: '11',
+  Dec: '12',
 };
 
 function matchTransactionData(transactionData, regex) {
   let matchData = '';
-    for (let i = 0; i < transactionData.length; i++) {
-      const data = transactionData[i];
-      const regexMatch = regex.exec(data.textContent);
-      if (regexMatch != null) {
-        matchData = regexMatch[1];
-        break;
-      }
+  for (let i = 0; i < transactionData.length; i++) {
+    const data = transactionData[i];
+    const regexMatch = regex.exec(data.textContent);
+    if (regexMatch != null) {
+      matchData = regexMatch[1];
+      break;
     }
-    return matchData;
+  }
+  return matchData;
 }
 
 function getDateFromString(date) {
@@ -57,14 +57,14 @@ export const postedCategoryObject = {
     return matchTransactionData(transactionData, /Reference Number:(.*)/);
   },
   holderGetter: function (paymentData, transactionData) {
-    let holder = matchTransactionData(
+    const holder = matchTransactionData(
       transactionData,
       /Card Name and Number:(.*)/,
     );
     return getHolder(holder);
   },
-  dateGetter: function(paymentData, transactionData) {
-    let datePosted = matchTransactionData(
+  dateGetter: function (paymentData, transactionData) {
+    const datePosted = matchTransactionData(
       transactionData,
       /Transaction Date:(.*)/,
     );
@@ -79,14 +79,14 @@ export const pendingCategoryObject = {
     return paymentData[2] + Math.random();
   },
   holderGetter: function (paymentData, transactionData) {
-    let holder = matchTransactionData(
+    const holder = matchTransactionData(
       transactionData,
       /Card Name and Number:(.*)/,
     );
     return getHolder(holder);
   },
-  dateGetter: function(paymentData, transactionData) {
-    let datePosted = matchTransactionData(
+  dateGetter: function (paymentData, transactionData) {
+    const datePosted = matchTransactionData(
       transactionData,
       /Transaction Date:(.*)/,
     );

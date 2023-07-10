@@ -8,21 +8,21 @@ import { TextEncoder, TextDecoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
-import { documentTransformer } from "content_scripts/amex/document_transformer";
+import { documentTransformer } from 'content_scripts/amex/document_transformer';
 import {
   pendingCategory,
   postedCategory,
-} from "content_scripts/amex/category_objects";
+} from 'content_scripts/amex/category_objects';
 
-const { readFileSync } = require("fs");
-const jsdom = require("jsdom");
+const { readFileSync } = require('fs');
+const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 
-describe("Amex WebPage", () => {
-  describe("Posted transactions", () => {
-    it("will extract relevant data from it in reverse order (first row is last)", () => {
-      const file_path = "tests/resources/htmls/amex.html";
-      const file = readFileSync(file_path, "utf8");
+describe('Amex WebPage', () => {
+  describe('Posted transactions', () => {
+    it('will extract relevant data from it in reverse order (first row is last)', () => {
+      const file_path = 'tests/resources/htmls/amex.html';
+      const file = readFileSync(file_path, 'utf8');
       const dom = new JSDOM(file);
 
       const transactions = documentTransformer(
@@ -77,10 +77,10 @@ describe("Amex WebPage", () => {
     });
   });
 
-  describe("Pending transactions", () => {
-    it("will extract relevant data from it in reverse order (first row is last)", () => {
-      const file_path = "tests/resources/htmls/amex.html";
-      const file = readFileSync(file_path, "utf8");
+  describe('Pending transactions', () => {
+    it('will extract relevant data from it in reverse order (first row is last)', () => {
+      const file_path = 'tests/resources/htmls/amex.html';
+      const file = readFileSync(file_path, 'utf8');
       const dom = new JSDOM(file);
 
       const transactions = documentTransformer(

@@ -1,7 +1,7 @@
 import { documentTransformer } from 'content_scripts/cnb/document_transformer';
 
 export function transactionsExtractor(doc, docCategoryObject) {
-  return new Promise((resolver) => {
+  return new Promise((resolve) => {
     const rows = doc.querySelectorAll(`#${docCategoryObject.tableID} tbody tr`);
 
     const observer = new MutationObserver(mutations => {
@@ -11,7 +11,7 @@ export function transactionsExtractor(doc, docCategoryObject) {
         element.click();
       });
 
-      resolver(documentTransformer(doc, docCategoryObject));
+      resolve(documentTransformer(doc, docCategoryObject));
     });
 
     observer.observe(document.querySelector(`#${docCategoryObject.tableID}`), {

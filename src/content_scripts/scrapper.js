@@ -5,9 +5,9 @@ import {
 } from 'browser_dep';
 
 import {
-    processTransactions,
-    promoteStoredReferenceNumbers,
-    resetStoredReferenceNumbers,
+  processTransactions,
+  promoteStoredReferenceNumbers,
+  resetStoredReferenceNumbers,
 } from 'content_scripts/scrapper_actions';
 
 // CNB
@@ -69,11 +69,11 @@ import * as actions from 'constants/actions';
     },
   };
 
-  let defaultStorageData = {
+  const defaultStorageData = {
     referenceNumbers: [],
     temporalReferenceNumbers: [],
   };
-  let localStorage = browser.storage.local;
+  const localStorage = browser.storage.local;
 
   function checkStoredData(storedSettings) {
     if (!storedSettings.referenceNumbers || !storedSettings.temporalReferenceNumbers) {
@@ -89,7 +89,7 @@ import * as actions from 'constants/actions';
         .then(storedData => {
           const storedReferenceNumbers = new Set(storedData.referenceNumbers);
           const webpage = message.webpage;
-          if (message.transactionType == actions.POSTED) {
+          if (message.transactionType === actions.POSTED) {
             processTransactions(
               localStorage,
               storedReferenceNumbers,
@@ -97,7 +97,7 @@ import * as actions from 'constants/actions';
               true,
               mCopyToClipboard,
             );
-          } else if (message.transactionType == actions.PENDING) {
+          } else if (message.transactionType === actions.PENDING) {
             processTransactions(
               localStorage,
               storedReferenceNumbers,
@@ -113,5 +113,4 @@ import * as actions from 'constants/actions';
       resetStoredReferenceNumbers(localStorage, defaultStorageData);
     }
   });
-
 })();

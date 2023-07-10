@@ -16,7 +16,6 @@ function getHolder(doc) {
   } else {
     return '';
   }
-
 }
 
 function getMoneyFromString(moneyString) {
@@ -28,10 +27,10 @@ function getMoneyFromString(moneyString) {
 }
 
 function getBusinessName(name) {
-  let trimmedName = name.replace(/\s+/g,' ');
+  const trimmedName = name.replace(/\s+/g, ' ');
   return trimmedName.replace(
     /\b\w+\b/g,
-    function(txt) {
+    function (txt) {
       return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     },
   );
@@ -44,17 +43,17 @@ function itemTransformer(element, categoryObject) {
   const money = element.querySelector('div:nth-child(5)').textContent;
 
   const additionalInformation = element.querySelector('div:nth-child(2)').textContent;
-  const isPending = additionalInformation == 'Pending';
+  const isPending = additionalInformation === 'Pending';
   const shouldReturnPending =
-    isPending && categoryObject.processType == PENDING;
+    isPending && categoryObject.processType === PENDING;
   const shouldReturnPosted =
-    !isPending && categoryObject.processType == POSTED;
+    !isPending && categoryObject.processType === POSTED;
 
   if (shouldReturnPending || shouldReturnPosted) {
     return {
       business: getBusinessName(business),
-      referenceNumber: referenceNumber,
-      transactionDate: transactionDate,
+      referenceNumber,
+      transactionDate,
       currency: categoryObject.currency,
       holder: categoryObject.holder,
       money: getMoneyFromString(money),

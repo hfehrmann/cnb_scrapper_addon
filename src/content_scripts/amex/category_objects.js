@@ -7,11 +7,11 @@ export const PLATINUM = 'AMEX(P)';
 export const EVERYDAY = 'AMEX(ED)';
 
 export const pendingCategory = {
-    processType: PENDING,
-    currency: USD_PENDING,
+  processType: PENDING,
+  currency: USD_PENDING,
 };
 
 export const postedCategory = {
-    processType: POSTED,
-    currency: USD,
+  processType: POSTED,
+  currency: USD,
 };
